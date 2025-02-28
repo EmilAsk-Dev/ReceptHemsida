@@ -23,7 +23,10 @@ namespace ReceptHemsida.Pages
         public async Task<IActionResult> OnPostAddTestUser()
         {
             await AddTestUser();
-            return RedirectToPage(); 
+
+            return RedirectToPage(); // Reloads the page after submission
+          
+
         }
 
         public async Task<IActionResult> OnPostRemoveTestUsers()
@@ -35,7 +38,11 @@ namespace ReceptHemsida.Pages
         private async Task AddTestUser()
         {
             _logger.LogInformation("Adding test user...");
-            var user = new ApplicationUser { Id = Guid.NewGuid().ToString(), UserName = "testuser" };
+
+            var user = new ApplicationUser { Id = Guid.NewGuid().ToString(), UserName = "TestUser" };
+
+            
+
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
