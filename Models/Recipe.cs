@@ -1,0 +1,30 @@
+﻿using ReceptHemsida.Data;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+
+namespace ReceptHemsida.Models
+{
+    public class Recipe
+    {
+        [Key]
+        public Guid Id { get; set; }
+
+        [Required]
+        public string UserId { get; set; }
+
+        [Required]
+        [StringLength(255)]
+        public string Title { get; set; }
+
+        [Required]
+        public string Description { get; set; }
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        [ForeignKey("UserId")]
+        public virtual ApplicationUser User { get; set; }
+        public virtual ICollection<RecipeIngredient> RecipeIngredients { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<Favorite> Favorites { get; set; }
+    }
+}
