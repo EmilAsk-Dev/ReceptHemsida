@@ -83,7 +83,7 @@ namespace ReceptHemsida.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error deleting comment with ID: {comment}", id);
+                _logger.LogError(ex, $"Error deleting comment with ID:" + id);
                 return false;
             }
         }
