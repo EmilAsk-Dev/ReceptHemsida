@@ -21,6 +21,8 @@ namespace ReceptHemsida.Models
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+        public RecipeCategory Category { get; set; }
+
         [ForeignKey("UserId")]
         public virtual ApplicationUser User { get; set; }
         public virtual ICollection<RecipeIngredient> RecipeIngredients { get; set; }
