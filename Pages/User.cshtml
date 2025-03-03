@@ -29,10 +29,10 @@
                 <div class="recipe-content">
                     <h3 class="reicpe-title">@recipe.Title</h3>
                     <div class="recipe-meta">
-						<span>@recipe.CookTime min</span>
-						<span>@recipe.Difficulty</span>
+                        <span>@recipe.CookTime min</span>
+                        <span>@recipe.Difficulty</span>
                     </div>
-                 
+
                 </div>
                 <p class="recipe-desc">@recipe.Description</p>
                 <div class="recipe-footer">
@@ -45,6 +45,21 @@
                     <a href="/recipe/details/@recipe.Id" class="btn">View Recipe</a>
                 </div>
             </div>
+            @if(Model.SavedRecipes.Any(recipe => recipe.Id == recipe.Id))
+            {
+                <form method="post" asp-page-handler="RemoveFavorite">
+                    <input type="hidden" name="recipeId" value="@recipe.Id"/>
+                    <button type="submit" class="btn">Delete</button>
+                </form>
+            }
+            else
+            {
+                <form method="post" asp-page-handler="AddFavorite">
+					<input type="hidden" name="recipeId" value="@recipe.Id" />
+					<button type="submit" class="btn">Save</button>"
+
+                </form>
+            }
         }
        
     </div>
