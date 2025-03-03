@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
-using ReceptHemsida.Data;  // Add this import for ApplicationUser
+using ReceptHemsida.Data; 
 
 namespace ReceptHemsida.Pages
 {
