@@ -8,9 +8,9 @@ namespace ReceptHemsida.Services
     {
 
         private readonly ApplicationDbContext _context;
-        private readonly ILogger<CommentService> _logger;
+        private readonly ILogger<RecipeService> _logger;
 
-        public RecipeService(ApplicationDbContext context, ILogger<CommentService> logger)
+        public RecipeService(ApplicationDbContext context, ILogger<RecipeService> logger)
         {
             _context = context;
             _logger = logger;
@@ -48,7 +48,7 @@ namespace ReceptHemsida.Services
             }
         }
 
-        public async Task CreateRecipeAsync(Recipe recipe)
+        public async Task AddRecipeAsync(Recipe recipe)
         {
             try
             {
