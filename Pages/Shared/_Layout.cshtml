@@ -1,4 +1,4 @@
-﻿@inject SignInManager<IdentityUser> SignInManager
+﻿@inject SignInManager<ReceptHemsida.Data.ApplicationUser> SignInManager
 
 <!DOCTYPE html>
 <html lang="en">
@@ -9,14 +9,16 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ReceptHemsida.styles.css" asp-append-version="true" />
-   
+
 </head>
 <body>
     <header>
         <div class="container">
             <nav class="navbar">
-                <div class="logo">Benjas<span>Cookingstation</span>
-                    <img src="/Images/Stekpanna.svg" alt="Stekpanna" class="pan-icon"/></div>
+                <div class="logo">
+                    Benjas<span>Cookingstation</span>
+                    <img src="/Images/Stekpanna.svg" alt="Stekpanna" class="pan-icon" />
+                </div>
                 <div class="nav-links">
                     @if (SignInManager.IsSignedIn(User))
                     {
@@ -28,11 +30,11 @@
                         <a href="#">Recipes</a>
                         <a href="#">Categories</a>
                     }
-                  <button class="user-btn" onclick="openModal()">
-                      <img src="/Images/User.svg" alt="User" class="user-icon"/>
-                  </button>
+                    <button class="user-btn" onclick="openModal()">
+                        <img src="/Images/User.svg" alt="User" class="user-icon" />
+                    </button>
                 </div>
-               
+
                 <div id="userModal" class="modal">
                     <div class="modal-content">
                         <span class="close" onclick="closeModal()">&times;</span>
@@ -40,17 +42,17 @@
                         <p>Håll ordning på dina recept, genom lätt att ha dem samlade.</p>
                         <p>Skapa dina egna veckomenyer. Spara dina favoriter!</p>
                         <p>Gäster över? Spara artiklar med tips och tester som finns för att inspirera dig.</p>
-                       <div>
+                        <div>
                             <button class=" btn-login">Logga in</button>
                             <button class="btn-register">Registrera</button>
-                       </div>
+                        </div>
                     </div>
                 </div>
             </nav>
             <div class="search-bar">
                 <input type="text" placeholder="Search recipes...">
-                <button>@* 🔍 *@
-					<img src="/Images/search.svg" alt="Search">
+                <button>
+                    <img src="/Images/search.svg" alt="Search">
                 </button>
             </div>
         </div>
@@ -62,7 +64,7 @@
         </main>
     </div>
 
-   
+
     <footer>
         <div class="container">
             <div class="footer-content">
