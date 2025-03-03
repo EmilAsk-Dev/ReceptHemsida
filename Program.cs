@@ -6,6 +6,7 @@ using ReceptHemsida.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<RecipeService>();
+builder.Services.AddScoped<FavoriteService>();
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");

@@ -79,5 +79,26 @@ namespace ReceptHemsida.Services
                 return false;
             }
         }
+        public async Task<Dictionary<string,List<Recipe>>> GetAllUserFavoritesAsync()
+        {
+            try
+            {
+                var allFavorites= await _context.Favorites
+                    .Include(f => f.Recipe)
+                    .Include(f => f.Recipe.User)
+                    .ToListAsync();
+                return allFavorites
+                    .GroupBy(f => f.User.UserName)
+                    .ToDictionary(g => g.Key,
+                     g => g.Select(f => f.Recipe).ToList()
+                    );
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting user favorites:{ex.Message} ");
+                return new Dictionary<string, List<Recipe>>();
+            }
+        }
     }
 }
