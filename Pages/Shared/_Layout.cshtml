@@ -47,8 +47,10 @@
                         <p>Skapa dina egna veckomenyer. Spara dina favoriter!</p>
                         <p>Gäster över? Spara artiklar med tips och tester som finns för att inspirera dig.</p>
                         <div>
-                            <button class=" btn-login">Logga in</button>
-                            <button class="btn-register">Registrera</button>
+                            <form method="get" asp-page="/Login">
+                                <button type="submit" class=" btn-login">Log in</button>
+                            </form>
+                            <button class="btn-register">Register</button>
                         </div>
                     </div>
                 </div>
