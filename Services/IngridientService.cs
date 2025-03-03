@@ -22,5 +22,31 @@ namespace ReceptHemsida.Services
                 .Include(i => i.RecipeIngredients)
                 .ToListAsync();
         }
+
+        public async Task<Ingredient> GetIngredientByIdAsync(Guid id)
+        {
+            return await _context.Ingredients
+                .Include(i => i.RecipeIngredients)
+                .FirstOrDefaultAsync(i => i.Id == id);
+        }
+
+        public async Task AddIngredientAsync(Ingredient ingredient)
+        {
+            _context.Ingredients.Add(ingredient);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateIngredientAsync(Ingredient ingredient)
+        {
+            _context.Ingredients.Update(ingredient);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteIngredientAsync(Guid id)
+        {
+            var ingredient = await GetIngredientByIdAsync(id);
+            _context.Ingredients.Remove(ingredient);
+            await _context.SaveChangesAsync();
+        }
     }
 }
