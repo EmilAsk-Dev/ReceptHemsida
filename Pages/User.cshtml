@@ -1,0 +1,149 @@
+﻿@page
+@model ReceptHemsida.Pages.UserModel
+@{
+    ViewData["Title"] = "User";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+
+<!-- Categories Section -->
+<section class="container">
+    <div class="categories">
+        <div class="category active">All</div>
+        <div class="category">Breakfast</div>
+        <div class="category">Lunch</div>
+        <div class="category">Dinner</div>
+        <div class="category">Desserts</div>
+        <div class="category">Vegetarian</div>
+        <div class="category">Quick Meals</div>
+    </div>
+</section>
+<!-- Recipe Cards Section -->
+<section class="container">
+    <h2 class="section-title">Sparade recept</h2>
+    <div class="recipes-container">
+        @foreach (var recipe in Model.SavedRecipes) //Loopar igenom alla sparade recept
+        {
+            <div class="recipe-card">
+                <img src="@recipe.ImageUrl" alt="@recipe.Title" class="recipe-img">
+                <div class="recipe-content">
+                    <h3 class="reicpe-title">@recipe.Title</h3>
+                    <div class="recipe-meta">
+						<span>@recipe.CookTime min</span>
+						<span>@recipe.Difficulty</span>
+                    </div>
+                 
+                </div>
+                <p class="recipe-desc">@recipe.Description</p>
+                <div class="recipe-footer">
+                    <div class="recipe-tags">
+                        @foreach (var tag in recipe.Tags)
+                        {
+                            <span class="recipe-tag">@tag</span>
+                        }
+                    </div>
+                    <a href="/recipe/details/@recipe.Id" class="btn">View Recipe</a>
+                </div>
+            </div>
+        }
+       
+    </div>
+</section>
+
+<!-- Featured Recipe Section -->
+<section class="featured-section">
+    <div class="container">
+        <div class="featured-wrapper">
+            <div class="featured-content">
+                <h2>Featured Recipe of the Month</h2>
+                <p>This delicious homemade lasagna is packed with layers of pasta, rich meat sauce, and creamy cheese. It's the ultimate comfort food that's perfect for family dinners or special occasions.</p>
+                <p>Our chef's special recipe includes a secret blend of herbs and spices that brings this classic dish to the next level.</p>
+                <a href="#" class="btn">Get the Recipe</a>
+            </div>
+            <div class="featured-img">
+                <img src="/Images/Lasagna.jpg" alt="Featured Recipe">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter Section -->
+<section class="newsletter">
+    <div class="container">
+        <h2>Never Miss a Recipe</h2>
+        <p>Subscribe to our newsletter and get weekly recipe updates, cooking tips, and special offers.</p>
+        <form class="newsletter-form">
+            <input type="email" placeholder="Your email address">
+            <button type="submit">Subscribe</button>
+        </form>
+    </div>
+</section>
+
+<!-- Recent Recipes Section -->
+<section class="container">
+    <h2 class="section-title">Recently Added</h2>
+    <div class="recipes">
+        <!-- Recipe Card 4 -->
+        <div class="recipe-card">
+            <img src="/Images/Thaicurry.jpg" alt="Recipe" class="recipe-img">
+            <div class="recipe-content">
+                <h3 class="recipe-title">Spicy Thai Curry</h3>
+                <div class="recipe-meta">
+                    <span>45 min</span>
+                    <span>Medium</span>
+                </div>
+                <p class="recipe-desc">An aromatic and flavorful curry with vegetables and your choice of protein in a rich coconut sauce.</p>
+                <div class="recipe-footer">
+                    <div class="recipe-tags">
+                        <span class="recipe-tag">Thai</span>
+                        <span class="recipe-tag">Spicy</span>
+                    </div>
+                    <a href="#" class="btn">View Recipe</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recipe Card 5 -->
+        <div class="recipe-card">
+            <img src="/Images/pizza_neap.jpg" alt="Recipe" class="recipe-img">
+            <div class="recipe-content">
+                <h3 class="recipe-title">Homemade Pizza</h3>
+                <div class="recipe-meta">
+                    <span>90 min</span>
+                    <span>Medium</span>
+                </div>
+                <p class="recipe-desc">Create the perfect pizza at home with a crispy crust and your favorite toppings. Better than takeout!</p>
+                <div class="recipe-footer">
+                    <div class="recipe-tags">
+                        <span class="recipe-tag">Italian</span>
+                        <span class="recipe-tag">Family</span>
+                    </div>
+                    <a href="#" class="btn">View Recipe</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recipe Card 6 -->
+        <div class="recipe-card">
+            <img src="/Images/bananabread.jpg" alt="Recipe" class="recipe-img">
+            <div class="recipe-content">
+                <h3 class="recipe-title">Banana Bread</h3>
+                <div class="recipe-meta">
+                    <span>70 min</span>
+                    <span>Easy</span>
+                </div>
+                <p class="recipe-desc">A moist and delicious way to use up those overripe bananas. Perfect with a cup of coffee or tea.</p>
+                <div class="recipe-footer">
+                    <div class="recipe-tags">
+                        <span class="recipe-tag">Baking</span>
+                        <span class="recipe-tag">Breakfast</span>
+                    </div>
+                    <a href="#" class="btn">View Recipe</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+

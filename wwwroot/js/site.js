@@ -1,7 +1,9 @@
 ﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
 
-// Write your JavaScript code.
+
+const userModal = document.getElementById("userModal")
+userModal.style.display = "none";
 function openModal() {
     document.getElementById("userModal").style.display = "flex";
 }
