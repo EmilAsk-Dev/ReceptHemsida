@@ -311,10 +311,25 @@ namespace ReceptHemsida.Data.Migrations
                     b.Property<int>("Category")
                         .HasColumnType("int");
 
+                    b.Property<int>("CookTime")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Difficulty")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Instructions")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Tags")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
