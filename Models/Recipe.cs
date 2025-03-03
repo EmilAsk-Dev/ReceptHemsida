@@ -22,6 +22,11 @@ namespace ReceptHemsida.Models
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public RecipeCategory Category { get; set; }
+        public int CookTime { get; set; }
+        public string Difficulty { get; set; }
+        public string Instructions { get; set; }
+        public List<string> Tags { get; set; }= new List<string>();
+        public string ImageUrl => $"/images/{Title.Replace(" ", "").ToLower()}.jpg";
 
         [ForeignKey("UserId")]
         public virtual ApplicationUser User { get; set; }
