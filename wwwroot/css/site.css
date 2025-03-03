@@ -513,3 +513,115 @@ footer {
             padding: 12px;
         }
 }
+
+/*Register*/
+.reg-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 380px;
+    background: rgb(138, 194, 138);
+    padding: 20px;
+    border-radius: 20px;
+    position: relative;
+}
+.reg-title {
+    font-size: 28px;
+    color: white;
+    letter-spacing: 0.3px;
+    position: relative;
+    text-align: center;
+}
+.form-group {
+    display: flex;
+    width: 100%;
+    gap: 6px;
+}
+.reg-form label {
+    position: relative;
+}
+.reg-form input {
+    width: 100%;
+    padding: 10px 10px 20px 10px;
+    outline: none;
+    border: none;
+    border-radius:10px;
+}
+.reg-form label input + span{
+    position:absolute;
+    left:10px;
+    top:15px;
+    color:black;
+    font-size:0.9em;
+    cursor:text;
+    transition:0.3s ease;
+}
+.reg-form label input:placeholder-shown+ span{
+    top:15px;
+    font-size:0.9em;
+}
+.reg-form label input:focus + span,
+.reg-form label input:valid + span{
+    top:30px;
+    font-size:0.7em;
+    font-weight:600;
+}
+.reg-form label .icon{
+    position:absolute;
+    top:50%;
+    right:10px;
+    transform:translateY(-50%);
+    color:black;
+    cursor:pointer;
+    width:20px;
+    height:20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:9;
+}
+.submit {
+    border-radius: 10px;
+    outline: none;
+    background: var(--primary);
+    color: white;
+    font-size: 16px;
+    cursor:pointer;
+}
+    .submit:hover {
+        background: var(--secondary);
+    }
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    max-width: 1000px;
+    margin: auto;
+}
+.reg-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+    max-width: 1000px;
+    height: 100vh;
+}
+.reg-form {
+    flex: 1;
+    background-color: rgb(138, 194, 138);
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    max-width: 400px;
+}
+
+.video-container {
+    flex: 1;
+}
+
+iframe {
+    width: 500px;
+    height: 500px;
+    border-radius: 10px;
+}

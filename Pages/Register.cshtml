@@ -1,32 +1,63 @@
 ﻿@page
 @model ReceptHemsida.Pages.RegisterModel
 @{
-    ViewData["Title"] = "Register";
+	ViewData["Title"] = "Register";
 }
 
-<h2>Register</h2>
+<div class="reg-container">
 
-<form method="post">
-    <div>
-        <label>Username</label>
-        <input asp-for="Input.Username" required />
-    </div>
-    <div>
-        <label>Email</label>
-        <input asp-for="Input.Email" type="email" required />
-    </div>
-    <div>
-        <label>Password</label>
-        <input asp-for="Input.Password" type="password" required />
-    </div>
-    <div>
-        <label>Confirm Password</label>
-        <input asp-for="Input.ConfirmPassword" type="password" required />
-    </div>
-    <button type="submit">Register</button>
+<form class="reg-form" autocomplete="off">
+	<p class="reg-title">Register</p>
+
+	<div class="form-group">
+		<label>
+			<input asp-for="Input.Username" required />
+			<span>Firstname</span>
+		</label>
+		<label>
+			<input required />
+			<span>Lastname</span>
+		</label>
+	</div>
+
+	<label>
+		<input asp-for="Input.Email" type="email" required />
+		<span>Email</span>
+	</label>
+
+	
+	<label for="Password">Password
+		<input asp-for="Input.Password" type="password" id="Password" required />
+	</label>
+	
+	<span class="icon" id="togglePassword">
+		<i class="far fa-eye-slash"></i>
+	</span>
+
+	<div>
+		<label for="ConfirmPassword">Confirm Password
+		<input asp-for="Input.ConfirmPassword" type="password" id="ConfirmPassword" required />
+		</label>
+		
+		<span class="icon" id="togglePasswordConfirm">
+			<i class="far fa-eye-slash"></i>
+		</span>
+	</div>
+
+	<button class="submit" type="submit">Register</button>
 </form>
-
+<!-- YouTube-video -->
+<div class="video-container">
+	<iframe width="560" height="315"
+			src="https://www.youtube.com/embed/2w77Of8pAHQ"
+			title="YouTube video player"
+			frameborder="0"
+			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+			allowfullscreen>
+	</iframe>
+</div>
+</div>
 @if (!ViewData.ModelState.IsValid)
 {
-    <p style="color: red;">Registration failed. Check errors below.</p>
+	<p style="color: red;">Registration failed. Check errors below.</p>
 }

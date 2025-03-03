@@ -52,9 +52,12 @@ namespace ReceptHemsida.Services
         {
             try
             {
+
                 // Lägger till receptet i databasen
                 _context.Recipes.Add(recipe);
                 await _context.SaveChangesAsync();
+
+              
             }
             catch (Exception ex)
             {

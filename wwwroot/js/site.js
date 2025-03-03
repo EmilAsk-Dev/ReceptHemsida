@@ -19,3 +19,31 @@ window.onclick = function (event) {
         modal.style.display = "none";
     }
 }
+
+//Register
+const togglePasswordVisibility = (inputElement,
+    toggleElement,iconElement) => {
+    if (inputElement.type === "password") {
+        inputElement.type = "text";
+        iconElement.remove("fa-eye-slash"); 
+        iconElement.add("fa-eye");
+    }
+    else {
+        inputElement.type = "password";
+        iconElement.remove("fa-eye-slash");
+        iconElement.add("fa-eye");
+    }
+
+    const passwordInput = document.getElementById("password");
+    const togglePassword = document.getElementById("togglePassword");
+    const passwordConfirm= document.getElementById("passwordConfirm");
+    const togglePasswordConfirm = document.getElementById("togglePasswordConfirm");
+
+    togglepassword.addEventListener("click", () => {
+        togglePasswordVisibility(passwordInput, togglepassword);
+    });
+
+    togglePasswordConfirm.addEventListener("click", () => {
+        togglePasswordVisibility(passwordConfirm, togglePasswordConfirm.querySelector("i"));
+    });
+}

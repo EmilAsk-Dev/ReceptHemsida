@@ -1,0 +1,30 @@
+﻿@page
+@model ReceptHemsida.Pages.AllRecipeModel
+@{
+	ViewData["Title"] = "All Recipes";
+
+	Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+<h2 class="section-title">All Recipes</h2>
+
+<section class="container">
+    <div class="recipes-container">
+        @foreach (var recipe in Model.AllRecipes) // Loopar igenom alla recept
+        {
+            <div class="recipe-card">
+                <img src="@recipe.ImageUrl" alt="@recipe.Title" class="recipe-img">
+                <div class="recipe-content">
+                    <h3 class="recipe-title">@recipe.Title</h3>
+                    <div class="recipe-meta">
+                        <span>@recipe.CookTime min</span>
+                        <span>@recipe.Difficulty</span>
+                    </div>
+                </div>
+                <p class="recipe-desc">@recipe.Description</p>
+                <div class="recipe-footer">
+                    <a href="/recipe/details/@recipe.Id" class="btn">View Recipe</a>
+                </div>
+            </div>
+        }
+    </div>
+</section>
