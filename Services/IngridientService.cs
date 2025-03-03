@@ -8,11 +8,13 @@ namespace ReceptHemsida.Services
     {
         // Property
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<IngridientService> _logger;
 
         // Constructor
-        public IngridientService(ApplicationDbContext context)
+        public IngridientService(ApplicationDbContext context, ILogger<IngridientService> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // Methods
@@ -26,7 +28,7 @@ namespace ReceptHemsida.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error fetching ingredients: {ex.Message}");
+                _logger.LogError(ex, "Error fetching ingredients.");
                 return new List<Ingredient>();
             }
         }
@@ -41,7 +43,7 @@ namespace ReceptHemsida.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error fetching ingredient by ID: {ex.Message}");
+                _logger.LogError(ex, "Error fetching ingredient: {id}", id);
                 return null;
             }
         }
@@ -55,7 +57,7 @@ namespace ReceptHemsida.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error adding ingredient: {ex.Message}");
+                _logger.LogError(ex, "Error adding ingredient.");
             }
         }
 
@@ -68,7 +70,7 @@ namespace ReceptHemsida.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error updating ingredient: {ex.Message}");
+                _logger.LogError(ex, "Error updating ingredient: {ingredientId}", ingredient.Id);
             }
         }
 
@@ -82,7 +84,7 @@ namespace ReceptHemsida.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error deleting ingredient: {ex.Message}");
+                _logger.LogError(ex, "Error deleting ingredient: {ingredientId}", id);
             }
         }
     }
