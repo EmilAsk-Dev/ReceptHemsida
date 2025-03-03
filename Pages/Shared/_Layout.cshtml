@@ -1,4 +1,5 @@
 ﻿@inject SignInManager<ReceptHemsida.Data.ApplicationUser> SignInManager
+@inject UserManager<ReceptHemsida.Data.ApplicationUser> UserManager
 
 <!DOCTYPE html>
 <html lang="en">
@@ -19,6 +20,7 @@
                     Benjas<span>Cookingstation</span>
                     <img src="/Images/Stekpanna.svg" alt="Stekpanna" class="pan-icon" />
                 </div>
+
                 <div class="nav-links">
                     @if (SignInManager.IsSignedIn(User))
                     {
@@ -28,23 +30,34 @@
                         <form method="post" asp-page="/Logout">
                             <button type="submit">Logout</button>
                         </form>
+
+                        <button class="user-btn" onclick="openModal()">
+                            <img src="/svg/gearwheel.svg" alt="User" class="user-icon" />
+                        </button>
                     }
                     else
                     {
                         <a href="#">Recipes</a>
                         <a href="#">Categories</a>
-                    }
-                    
-                    @if (!SignInManager.IsSignedIn(User))
-                    {
+
                         <button class="user-btn" onclick="openModal()">
                             <img src="/Images/User.svg" alt="User" class="user-icon" />
                         </button>
                     }
                 </div>
 
+
                 <div id="userModal" class="modal">
                     <div class="modal-content">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            var currentUser = await UserManager.GetUserAsync(User);
+                            <p>Username: @currentUser.UserName</p>
+                            <p>Email: @currentUser.Email</p>
+                            <p>Change password</p>
+                        }
+                        else
+                        {
                         <span class="close" onclick="closeModal()">&times;</span>
                         <h2>Spara och inspireras av dina favoritrecept-Skapa ett gratiskonto</h2>
                         <p>Håll ordning på dina recept, genom lätt att ha dem samlade.</p>
@@ -58,8 +71,10 @@
 								<button type="submit" class="btn-register">Register</button>
                             </form>
                         </div>
+                        }
                     </div>
                 </div>
+
             </nav>
             <div class="search-bar">
                 <input type="text" placeholder="Search recipes...">
