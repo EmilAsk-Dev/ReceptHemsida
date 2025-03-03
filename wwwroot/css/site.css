@@ -609,7 +609,7 @@ footer {
 }
 .reg-form {
     flex: 1;
-    background-color: #2c2f33;
+    background-color: rgb(138, 194, 138);
     padding: 20px;
     border-radius: 10px;
     color: white;
