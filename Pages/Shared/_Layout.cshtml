@@ -56,8 +56,19 @@
 							<p>Email: @currentUser.Email</p> 
                             <br />
 							<br />
+                            <button>Edit user information</button>
                             <button>Change password</button>
-                            <button>Edit profile information</button>
+
+                            <div id="passwordForm" style="display:none;">
+                                <form method="post">
+                                    <div>
+                                        <input type="password" id="currentPassword" name="CurrentPassword" placeholder="Current password" required />
+                                        <input type="password" id="newPassword" name="NewPassword" placeholder="New password" required />
+                                        <input type="password" id="confirmPassword" name="ConfirmPassword" placeholder="Confirm password" required />
+                                        <button type="submit">Save Changes</button>
+                                    </div>
+                                </form>
+                            </div>
                         }
                         else
                         {
