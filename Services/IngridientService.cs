@@ -18,35 +18,72 @@ namespace ReceptHemsida.Services
         // Methods
         public async Task<List<Ingredient>> GetAllIngredientsAsync()
         {
-            return await _context.Ingredients
-                .Include(i => i.RecipeIngredients)
-                .ToListAsync();
+            try
+            {
+                return await _context.Ingredients
+                    .Include(i => i.RecipeIngredients)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching ingredients: {ex.Message}");
+                return new List<Ingredient>();
+            }
         }
 
         public async Task<Ingredient> GetIngredientByIdAsync(Guid id)
         {
-            return await _context.Ingredients
-                .Include(i => i.RecipeIngredients)
-                .FirstOrDefaultAsync(i => i.Id == id);
+            try
+            {
+                return await _context.Ingredients
+                    .Include(i => i.RecipeIngredients)
+                    .FirstOrDefaultAsync(i => i.Id == id);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching ingredient by ID: {ex.Message}");
+                return null;
+            }
         }
 
         public async Task AddIngredientAsync(Ingredient ingredient)
         {
-            _context.Ingredients.Add(ingredient);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Ingredients.Add(ingredient);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error adding ingredient: {ex.Message}");
+            }
         }
 
         public async Task UpdateIngredientAsync(Ingredient ingredient)
         {
-            _context.Ingredients.Update(ingredient);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Ingredients.Update(ingredient);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating ingredient: {ex.Message}");
+            }
         }
 
         public async Task DeleteIngredientAsync(Guid id)
         {
-            var ingredient = await GetIngredientByIdAsync(id);
-            _context.Ingredients.Remove(ingredient);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var ingredient = await GetIngredientByIdAsync(id);
+                _context.Ingredients.Remove(ingredient);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting ingredient: {ex.Message}");
+            }
         }
     }
 }
