@@ -7,39 +7,109 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ReceptHemsida.styles.css" asp-append-version="true" />
+   
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">ReceptHemsida</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                    <partial name="_LoginPartial" />
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">Benjas<span>Cookingstation</span>
+                    <img src="/Images/Stekpanna.svg" alt="Stekpanna" class="pan-icon"/></div>
+                <div class="nav-links">
+                  @*   <a href="#">Home</a> *@
+                    <a href="#">Recipes</a>
+                    <a href="#">Categories</a>
+                    @* <a href="#">About</a> *@
+                  @*   <a href="#">Contact</a> *@
+
+                  <button class="user-btn" onclick="openModal()">
+                      <img src="/Images/User.svg" alt="User" class="user-icon"/>
+                  </button>
+
                 </div>
+                <!-- Pop-up (modal) -->
+                <div id="userModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeModal()">&times;</span>
+                        <h2>Spara och inspireras av dina favoritrecept-Skapa ett gratiskonto</h2>
+                        <p>Håll ordning på dina recept, genom lätt att ha dem samlade.</p>
+                        <p>Skapa dina egna veckomenyer. Spara dina favoriter!</p>
+                        <p>Gäster över? Spara artiklar med tips och tester som finns för att inspirera dig.</p>
+                       <div>
+                            <button class=" btn-login">Logga in</button>
+                            <button class="btn-register">Registrera</button>
+                       </div> 
+                       
+                    
+                    </div>
+
+                </div>
+            </nav>
+            <div class="search-bar">
+                <input type="text" placeholder="Search recipes...">
+                <button>@* 🔍 *@
+					<img src="/Images/search.svg" alt="Search">
+                </button>
             </div>
-        </nav>
+        </div>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <!-- Footer Section -->
+    <footer>
         <div class="container">
-            &copy; 2025 - ReceptHemsida - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>RecipeWebsite</h3>
+                    <p>BenjasCookingstation samlar recept runt hela världen. Här kan du söka recept enkelt baserat på vad du suktar efter. Du kan även smidigt spara dina favoritrecept och organisera dem i egna samlingar</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/" target="_blank">
+                            <img src="/Images/facebook.svg" alt="Facebook">
+                        </a>
+                        <a href="https://www.instagram.com/" target="_blank">
+                            <img src="/images/instagram.svg" alt="Instagram">
+                        </a>
+                        <a href="https://www.pinterest.com/" target="_blank">
+                            <img src="/images/pinterest.svg" alt="Pinterest">
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Explore</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Popular Recipes</a></li>
+                        <li><a href="#">Categories</a></li>
+                        <li><a href="#">Submit Recipe</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Information</h3>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Help</h3>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Cooking Tips</a></li>
+                        <li><a href="#">Ingredient Substitutes</a></li>
+                        <li><a href="#">Kitchen Hacks</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 y. All rights reserved.</p>
+            </div>
         </div>
     </footer>
 
