@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject SignInManager<IdentityUser> SignInManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -16,18 +18,21 @@
                 <div class="logo">Benjas<span>Cookingstation</span>
                     <img src="/Images/Stekpanna.svg" alt="Stekpanna" class="pan-icon"/></div>
                 <div class="nav-links">
-                  @*   <a href="#">Home</a> *@
-                    <a href="#">Recipes</a>
-                    <a href="#">Categories</a>
-                    @* <a href="#">About</a> *@
-                  @*   <a href="#">Contact</a> *@
-
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <a href="#">Add Recipe</a>
+                        <a href="#">Manage Categories</a>
+                    }
+                    else
+                    {
+                        <a href="#">Recipes</a>
+                        <a href="#">Categories</a>
+                    }
                   <button class="user-btn" onclick="openModal()">
                       <img src="/Images/User.svg" alt="User" class="user-icon"/>
                   </button>
-
                 </div>
-                <!-- Pop-up (modal) -->
+               
                 <div id="userModal" class="modal">
                     <div class="modal-content">
                         <span class="close" onclick="closeModal()">&times;</span>
@@ -38,11 +43,8 @@
                        <div>
                             <button class=" btn-login">Logga in</button>
                             <button class="btn-register">Registrera</button>
-                       </div> 
-                       
-                    
+                       </div>
                     </div>
-
                 </div>
             </nav>
             <div class="search-bar">
@@ -60,7 +62,7 @@
         </main>
     </div>
 
-    <!-- Footer Section -->
+   
     <footer>
         <div class="container">
             <div class="footer-content">
