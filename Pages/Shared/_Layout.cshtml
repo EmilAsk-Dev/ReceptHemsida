@@ -53,8 +53,11 @@
                         {
                             var currentUser = await UserManager.GetUserAsync(User);
                             <p>Username: @currentUser.UserName</p>
-                            <p>Email: @currentUser.Email</p>
-                            <p>Change password</p>
+							<p>Email: @currentUser.Email</p> 
+                            <br />
+							<br />
+                            <button>Change password</button>
+                            <button>Edit profile information</button>
                         }
                         else
                         {
