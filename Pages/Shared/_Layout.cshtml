@@ -34,9 +34,13 @@
                         <a href="#">Recipes</a>
                         <a href="#">Categories</a>
                     }
-                    <button class="user-btn" onclick="openModal()">
-                        <img src="/Images/User.svg" alt="User" class="user-icon" />
-                    </button>
+                    
+                    @if (!SignInManager.IsSignedIn(User))
+                    {
+                        <button class="user-btn" onclick="openModal()">
+                            <img src="/Images/User.svg" alt="User" class="user-icon" />
+                        </button>
+                    }
                 </div>
 
                 <div id="userModal" class="modal">
