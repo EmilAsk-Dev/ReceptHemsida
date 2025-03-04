@@ -175,7 +175,7 @@ header {
 
 .hero {
     position: relative;
-    background: url('/Images/Hero_2.jpg') no-repeat center center !important; 
+    background: url('/svg/Hero_2.jpg') no-repeat center center !important;
     background-size: cover;
     display: flex;
     background-position: center;
@@ -184,7 +184,7 @@ header {
     padding: 100px 20px;
     margin-bottom: 40px;
     width: 100%;
-    min-height:500px;
+    min-height: 500px;
 }
 
     .hero h1 {
