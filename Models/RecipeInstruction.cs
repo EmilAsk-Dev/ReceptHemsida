@@ -5,7 +5,7 @@ namespace ReceptHemsida.Models
     public class RecipeInstruction
     {
         [Key]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [Required]
         public int StepNumber { get; set; } // För att kunna sortera stegen i rätt ordning
@@ -14,7 +14,7 @@ namespace ReceptHemsida.Models
         public string InstructionText { get; set; } // Själva instruktionen
 
         [Required]
-        public Guid RecipeId { get; set; } // Kopplar instruktionen till ett recept
+        public string RecipeId { get; set; } // Kopplar instruktionen till ett recept
 
         [ForeignKey("RecipeId")]
         public virtual Recipe Recipe { get; set; }

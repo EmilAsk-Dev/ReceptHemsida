@@ -6,10 +6,10 @@ namespace ReceptHemsida.Models
     public class RecipeIngredient
     {
         [Required]
-        public Guid RecipeId { get; set; }
+        public string RecipeId { get; set; }
 
         [Required]
-        public Guid IngredientId { get; set; }
+        public string IngredientId { get; set; }
 
         [Required]
         [StringLength(100)]

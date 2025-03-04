@@ -229,9 +229,8 @@ namespace ReceptHemsida.Data.Migrations
 
             modelBuilder.Entity("ReceptHemsida.Models.Comment", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -240,8 +239,9 @@ namespace ReceptHemsida.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("RecipeId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("RecipeId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -261,8 +261,8 @@ namespace ReceptHemsida.Data.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid>("RecipeId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("RecipeId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("UserId", "RecipeId");
 
@@ -288,9 +288,10 @@ namespace ReceptHemsida.Data.Migrations
 
             modelBuilder.Entity("ReceptHemsida.Models.Ingredient", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("nvarchar(450)")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -304,9 +305,10 @@ namespace ReceptHemsida.Data.Migrations
 
             modelBuilder.Entity("ReceptHemsida.Models.Recipe", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("nvarchar(450)")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<int>("Category")
                         .HasColumnType("int");
@@ -322,10 +324,6 @@ namespace ReceptHemsida.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Difficulty")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Instructions")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -351,11 +349,11 @@ namespace ReceptHemsida.Data.Migrations
 
             modelBuilder.Entity("ReceptHemsida.Models.RecipeIngredient", b =>
                 {
-                    b.Property<Guid>("RecipeId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("RecipeId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid>("IngredientId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IngredientId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Quantity")
                         .IsRequired()
@@ -367,6 +365,29 @@ namespace ReceptHemsida.Data.Migrations
                     b.HasIndex("IngredientId");
 
                     b.ToTable("RecipeIngredients");
+                });
+
+            modelBuilder.Entity("ReceptHemsida.Models.RecipeInstruction", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("InstructionText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RecipeId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("StepNumber")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipeId");
+
+                    b.ToTable("RecipeInstruction");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -507,6 +528,17 @@ namespace ReceptHemsida.Data.Migrations
                     b.Navigation("Recipe");
                 });
 
+            modelBuilder.Entity("ReceptHemsida.Models.RecipeInstruction", b =>
+                {
+                    b.HasOne("ReceptHemsida.Models.Recipe", "Recipe")
+                        .WithMany("Instructions")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Recipe");
+                });
+
             modelBuilder.Entity("ReceptHemsida.Data.ApplicationUser", b =>
                 {
                     b.Navigation("Comments");
@@ -530,6 +562,8 @@ namespace ReceptHemsida.Data.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("Favorites");
+
+                    b.Navigation("Instructions");
 
                     b.Navigation("RecipeIngredients");
                 });

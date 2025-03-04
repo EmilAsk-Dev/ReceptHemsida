@@ -7,6 +7,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<RecipeService>();
 builder.Services.AddScoped<FavoriteService>();
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<CommentService>();
+builder.Services.AddScoped<RecipeIngredientService>();
+builder.Services.AddScoped<IngridientService>();
+builder.Services.AddScoped<FollowerService>();
+
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");

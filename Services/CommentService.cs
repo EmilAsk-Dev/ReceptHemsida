@@ -18,7 +18,7 @@ namespace ReceptHemsida.Services
         }
 
         
-        public async Task<List<Comment>> GetCommentsForRecipeAsync(Guid recipeId)
+        public async Task<List<Comment>> GetCommentsForRecipeAsync(string recipeId)
         {
             try
             {
@@ -36,7 +36,7 @@ namespace ReceptHemsida.Services
         }
 
        
-        public async Task<Comment?> GetCommentByIdAsync(Guid id)
+        public async Task<Comment?> GetCommentByIdAsync(string id)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace ReceptHemsida.Services
         }
 
         
-        public async Task<bool> DeleteCommentAsync(Guid id)
+        public async Task<bool> DeleteCommentAsync(string id)
         {
             try
             {

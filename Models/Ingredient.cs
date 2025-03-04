@@ -5,7 +5,7 @@ namespace ReceptHemsida.Models
     public class Ingredient
     {
         [Key]
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         [Required]
         [StringLength(255)]

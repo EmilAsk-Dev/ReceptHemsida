@@ -17,7 +17,7 @@ namespace ReceptHemsida.Services
             _context = context;
         }
 
-        public async Task<List<RecipeIngredient>> GetIngredientsForRecipeAsync(Guid recipeId)
+        public async Task<List<RecipeIngredient>> GetIngredientsForRecipeAsync(string recipeId)
         {
             try
             {
@@ -46,7 +46,7 @@ namespace ReceptHemsida.Services
             }
         }
 
-        public async Task RemoveRecipeIngredientAsync(Guid recipeId, Guid ingredientId)
+        public async Task RemoveRecipeIngredientAsync(string recipeId, string ingredientId)
         {
             try
             {

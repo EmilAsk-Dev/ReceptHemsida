@@ -1,164 +1,104 @@
-﻿@page
+﻿@page "{username?}"
 @model ReceptHemsida.Pages.UserModel
 @{
-    ViewData["Title"] = "User";
+    ViewData["Title"] = "User Profile";
     Layout = "~/Pages/Shared/_Layout.cshtml";
+    bool isCurrentUserProfile = Model.IsCurrentUserProfile;
 }
 
-
-<!-- Categories Section -->
+<!-- User Profile Header -->
 <section class="container">
-    <div class="categories">
-        <div class="category active">All</div>
-        <div class="category">Breakfast</div>
-        <div class="category">Lunch</div>
-        <div class="category">Dinner</div>
-        <div class="category">Desserts</div>
-        <div class="category">Vegetarian</div>
-        <div class="category">Quick Meals</div>
+    <div class="user-profile-header">
+        <div class="user-avatar">
+            @* <img src="@Model.ProfileUser.ProfileImageUrl" alt="@Model.ProfileUser.UserName Profile Picture"> *@
+        </div>
+        <div class="user-info">
+            <h1>@Model.ProfileUser.UserName's Profile</h1>
+            @if (isCurrentUserProfile)
+            {
+                <p>This is your personal profile</p>
+            }
+            <div class="user-stats">
+                <span>Recipes Created: @Model.CreatedRecipes.Count</span>
+                <span>Saved Recipes: @Model.SavedRecipes.Count</span>
+            </div>
+        </div>
     </div>
 </section>
-<!-- Recipe Cards Section -->
+
+<!-- Created Recipes Section -->
 <section class="container">
-    <h2 class="section-title">Sparade recept</h2>
-    <div class="recipes-container">
-        @foreach (var recipe in Model.SavedRecipes) //Loopar igenom alla sparade recept
+    <h2 class="section-title">Recipes Created by @Model.ProfileUser.UserName</h2>
+    <div class="recipes">
+        @foreach (var recipe in Model.CreatedRecipes)
         {
             <div class="recipe-card">
                 <img src="@recipe.ImageUrl" alt="@recipe.Title" class="recipe-img">
                 <div class="recipe-content">
-                    <h3 class="reicpe-title">@recipe.Title</h3>
+                    <h3 class="recipe-title">@recipe.Title</h3>
                     <div class="recipe-meta">
                         <span>@recipe.CookTime min</span>
                         <span>@recipe.Difficulty</span>
                     </div>
-
-                </div>
-                <p class="recipe-desc">@recipe.Description</p>
-                <div class="recipe-footer">
-                    <div class="recipe-tags">
-                        @foreach (var tag in recipe.Tags)
-                        {
-                            <span class="recipe-tag">@tag</span>
-                        }
+                    <p class="recipe-desc">@recipe.Description</p>
+                    <div class="recipe-footer">
+                        <div class="recipe-tags">
+                            @foreach (var tag in recipe.Tags)
+                            {
+                                <span class="recipe-tag">@tag</span>
+                            }
+                        </div>
+                        <a href="/recipe/details/@recipe.Id" class="btn">View Recipe</a>
                     </div>
-                    <a href="/recipe/details/@recipe.Id" class="btn">View Recipe</a>
                 </div>
+                @if (isCurrentUserProfile)
+                {
+                    <div class="recipe-owner-actions">
+                        <a href="/recipe/edit/@recipe.Id" class="btn btn-edit">Edit</a>
+                        <form method="post" asp-page-handler="DeleteRecipe">
+                            <input type="hidden" name="recipeId" value="@recipe.Id" />
+                            <button type="submit" class="btn btn-delete">Delete</button>
+                        </form>
+                    </div>
+                }
             </div>
-            @if(Model.SavedRecipes.Any(recipe => recipe.Id == recipe.Id))
-            {
-                <form method="post" asp-page-handler="RemoveFavorite">
-                    <input type="hidden" name="recipeId" value="@recipe.Id"/>
-                    <button type="submit" class="btn">Delete</button>
-                </form>
-            }
-            else
-            {
-                <form method="post" asp-page-handler="AddFavorite">
-					<input type="hidden" name="recipeId" value="@recipe.Id" />
-					<button type="submit" class="btn">Save</button>"
-
-                </form>
-            }
         }
-       
     </div>
 </section>
 
-<!-- Featured Recipe Section -->
-<section class="featured-section">
-    <div class="container">
-        <div class="featured-wrapper">
-            <div class="featured-content">
-                <h2>Featured Recipe of the Month</h2>
-                <p>This delicious homemade lasagna is packed with layers of pasta, rich meat sauce, and creamy cheese. It's the ultimate comfort food that's perfect for family dinners or special occasions.</p>
-                <p>Our chef's special recipe includes a secret blend of herbs and spices that brings this classic dish to the next level.</p>
-                <a href="#" class="btn">Get the Recipe</a>
-            </div>
-            <div class="featured-img">
-                <img src="/Images/Lasagna.jpg" alt="Featured Recipe">
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Newsletter Section -->
-<section class="newsletter">
-    <div class="container">
-        <h2>Never Miss a Recipe</h2>
-        <p>Subscribe to our newsletter and get weekly recipe updates, cooking tips, and special offers.</p>
-        <form class="newsletter-form">
-            <input type="email" placeholder="Your email address">
-            <button type="submit">Subscribe</button>
-        </form>
-    </div>
-</section>
-
-<!-- Recent Recipes Section -->
+<!-- Saved Recipes Section -->
 <section class="container">
-    <h2 class="section-title">Recently Added</h2>
-    <div class="recipes">
-        <!-- Recipe Card 4 -->
-        <div class="recipe-card">
-            <img src="/Images/Thaicurry.jpg" alt="Recipe" class="recipe-img">
-            <div class="recipe-content">
-                <h3 class="recipe-title">Spicy Thai Curry</h3>
-                <div class="recipe-meta">
-                    <span>45 min</span>
-                    <span>Medium</span>
-                </div>
-                <p class="recipe-desc">An aromatic and flavorful curry with vegetables and your choice of protein in a rich coconut sauce.</p>
-                <div class="recipe-footer">
-                    <div class="recipe-tags">
-                        <span class="recipe-tag">Thai</span>
-                        <span class="recipe-tag">Spicy</span>
+    <h2 class="section-title">@(isCurrentUserProfile ? "Your Saved Recipes" : $"Recipes Saved by {Model.ProfileUser.UserName}")</h2>
+    <div class="recipes-container">
+        @foreach (var recipe in Model.SavedRecipes)
+        {
+            <div class="recipe-card">
+                <img src="@recipe.ImageUrl" alt="@recipe.Title" class="recipe-img">
+                <div class="recipe-content">
+                    <h3 class="recipe-title">@recipe.Title</h3>
+                    <div class="recipe-meta">
+                        <span>@recipe.CookTime min</span>
+                        <span>@recipe.Difficulty</span>
                     </div>
-                    <a href="#" class="btn">View Recipe</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Recipe Card 5 -->
-        <div class="recipe-card">
-            <img src="/Images/pizza_neap.jpg" alt="Recipe" class="recipe-img">
-            <div class="recipe-content">
-                <h3 class="recipe-title">Homemade Pizza</h3>
-                <div class="recipe-meta">
-                    <span>90 min</span>
-                    <span>Medium</span>
-                </div>
-                <p class="recipe-desc">Create the perfect pizza at home with a crispy crust and your favorite toppings. Better than takeout!</p>
-                <div class="recipe-footer">
-                    <div class="recipe-tags">
-                        <span class="recipe-tag">Italian</span>
-                        <span class="recipe-tag">Family</span>
+                    <p class="recipe-desc">@recipe.Description</p>
+                    <div class="recipe-footer">
+                        <div class="recipe-tags">
+                            @foreach (var tag in recipe.Tags)
+                            {
+                                <span class="recipe-tag">@tag</span>
+                            }
+                        </div>
+                        <a href="/recipe/details/@recipe.Id" class="btn">View Recipe</a>
                     </div>
-                    <a href="#" class="btn">View Recipe</a>
                 </div>
+                @if (isCurrentUserProfile)
+                {
+                    <form method="post" asp-page-handler="RemoveFavorite">
+                        <input type="hidden" name="recipeId" value="@recipe.Id" />
+                        <button type="submit" class="btn btn-delete">Remove</button>
+                    </form>
+                }
             </div>
-        </div>
-
-        <!-- Recipe Card 6 -->
-        <div class="recipe-card">
-            <img src="/Images/bananabread.jpg" alt="Recipe" class="recipe-img">
-            <div class="recipe-content">
-                <h3 class="recipe-title">Banana Bread</h3>
-                <div class="recipe-meta">
-                    <span>70 min</span>
-                    <span>Easy</span>
-                </div>
-                <p class="recipe-desc">A moist and delicious way to use up those overripe bananas. Perfect with a cup of coffee or tea.</p>
-                <div class="recipe-footer">
-                    <div class="recipe-tags">
-                        <span class="recipe-tag">Baking</span>
-                        <span class="recipe-tag">Breakfast</span>
-                    </div>
-                    <a href="#" class="btn">View Recipe</a>
-                </div>
-            </div>
-        </div>
+        }
     </div>
 </section>
-
-
-

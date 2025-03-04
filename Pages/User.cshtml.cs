@@ -1,72 +1,72 @@
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc;
+using ReceptHemsida.Data;
 using ReceptHemsida.Models;
 using ReceptHemsida.Services;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Linq;
-using Microsoft.AspNetCore.Identity;
-using ReceptHemsida.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Razor.TagHelpers;
-
 
 namespace ReceptHemsida.Pages
 {
-    [Authorize]
     public class UserModel : PageModel
     {
-      
-        private readonly FavoriteService _favoriteService;
+        private readonly UserService _userService;
+        private readonly RecipeService _recipeService;
         private readonly UserManager<ApplicationUser> _userManager;
-        //Konstruktor
-        public UserModel(FavoriteService favoriteService,UserManager<ApplicationUser>userManager)
+        private readonly FavoriteService _favoriteSerive;
+
+        public ApplicationUser ProfileUser { get; set; }
+        public List<Recipe> CreatedRecipes { get; set; }
+        public List<Recipe> SavedRecipes { get; set; }
+
+        public bool IsCurrentUserProfile { get; set; }
+
+        public UserModel(UserService userService, RecipeService recipeService, UserManager<ApplicationUser> userManager)
         {
-            _favoriteService = favoriteService;
-            _userManager = userManager; 
+            _userService = userService;
+            _recipeService = recipeService;
+            _userManager = userManager;
         }
-        public string LoggdInUserId { get; set; }
-        public Dictionary<string, List<Recipe>> UserFavorites { get; set; } = new();
-        public List<Recipe> SavedRecipes { get; set; } = new ();
-      
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGet(string username)
         {
-            var user = await _userManager.GetUserAsync(User);
-            if(user !=null)
+            ProfileUser = await _userService.GetUserByUsernameAsync(username);
+
+            if (ProfileUser == null)
             {
-                LoggdInUserId = user.Id;
-
-                //Hämtar alla användarens favoritrecept
-                var allFavorites = await _favoriteService.GetAllUserFavoritesAsync();
-                UserFavorites = allFavorites;
-
-                //Hämtar den inloggade användarens egna recept
-                SavedRecipes = await _favoriteService.GetFavoriteRecipesAsync(user.Id);
+                return NotFound("User not found");
             }
 
-        }
-        public async Task<IActionResult> OnPostAddFavoriteAsync(Guid recipeId)
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null) return Unauthorized();
-            
-            var favorite = new Favorite
-            {
-                UserId = user.Id,
-                RecipeId = recipeId
-            };
-            await _favoriteService.AddFavoriteAsync(favorite);
-            return RedirectToPage();
-        }
-        public async Task<IActionResult> OnPostRemoveFavoriteAsync(Guid recipeId)
-        {
-            var user = await _userManager.GetUserAsync(User); 
-            if (user == null) return Unauthorized(); // Om ingen användare är inloggad, neka åtkomst
+            var currentUser = await _userManager.GetUserAsync(User);
+            IsCurrentUserProfile = currentUser?.Id == ProfileUser?.Id;
 
-            await _favoriteService.RemoveFavoriteAsync(user.Id, recipeId); // Använder FavoriteService för att ta bort
-            return RedirectToPage();
+            // Use RecipeService to get created recipes
+            CreatedRecipes = await _recipeService.RecipesCreatedByUser(ProfileUser.Id);
+
+            // Use RecipeService to get saved recipes
+            SavedRecipes = await _favoriteSerive.GetFavoriteRecipesAsync(ProfileUser.Id);
+
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostDeleteRecipe(string recipeId)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            // Use RecipeService to delete the recipe
+            await _recipeService.DeleteRecipeAsync(currentUser.Id, recipeId);
+
+            return RedirectToPage("/User", new { username = currentUser.UserName });
+        }
+
+        public async Task<IActionResult> OnPostRemoveFavorite(string recipeId)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            // Use RecipeService to remove the saved recipe
+            await _favoriteSerive.RemoveFavoriteAsync(currentUser.Id, recipeId);
+
+            return RedirectToPage("/User", new { username = currentUser.UserName });
         }
     }
 }
+
