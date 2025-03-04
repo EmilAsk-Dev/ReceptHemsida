@@ -10,7 +10,7 @@ builder.Services.AddScoped<FavoriteService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<CommentService>();
 builder.Services.AddScoped<RecipeIngredientService>();
-builder.Services.AddScoped<IngridientService>();
+builder.Services.AddScoped<IngredientService>();
 builder.Services.AddScoped<FollowerService>();
 
 
