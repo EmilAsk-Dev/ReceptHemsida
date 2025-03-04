@@ -4,6 +4,37 @@
 	ViewData["Title"] = "addRecipe";
 
 }
+<form method="post">
+	@* Receptinformation *@
+	<label for="Title">Titel:</label>
+	<input type="text" asp-for="Recipe.Title" required/>
+
+   @*Beskrivning *@
+	<label for="Description">Beskrivning</label>
+	<textarea asp-for="Recipe.Description" required></textarea>
+
+	@* Tillagningstid *@
+	<label for="CookTime">Tillagningstid (minuter):</label>
+	<input type="number" asp-for="Recipe.CookTime" required />
+
+	@* Svårighetsgrad *@
+	<label for="Difficulty">Svårighetsgrad:</label>
+	<select asp-for="Recipe.Difficulty">
+		<option value="Easy">Easy</option>
+		<option value="Medium">Medium</option>
+		<option value="Hard">Hard</option>
+	</select>
+
+
+	@* Instruktioner *@
+	<h3>Instructions</h3>
+	<div id="instructionsContainer"></div>
+	<button type="button" id="addInstruction">Add instructions:</button>
+
+	<button type="submit">Save Recipe</button>
+
+	
+</form>
 
 
 
