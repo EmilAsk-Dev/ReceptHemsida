@@ -4,14 +4,14 @@ using ReceptHemsida.Models;
 
 namespace ReceptHemsida.Services
 {
-    public class IngridientService
+    public class IngredientService
     {
         // Property
         private readonly ApplicationDbContext _context;
-        private readonly ILogger<IngridientService> _logger;
+        private readonly ILogger<IngredientService> _logger;
 
         // Constructor
-        public IngridientService(ApplicationDbContext context, ILogger<IngridientService> logger)
+        public IngredientService(ApplicationDbContext context, ILogger<IngredientService> logger)
         {
             _context = context;
             _logger = logger;
