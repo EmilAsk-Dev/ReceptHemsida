@@ -47,6 +47,20 @@ namespace ReceptHemsida.Services
             }
         }
 
-        
+        public async Task<ApplicationUser> GetUserByUsernameAsync(string username)
+        {
+            try
+            {
+                return await _context.Users
+                    .FirstOrDefaultAsync(u => u.UserName == username);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving user by username: {ex.Message}");
+                return null;
+            }
+        }
+
+
     }
 }

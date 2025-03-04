@@ -7,8 +7,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<RecipeService>();
 builder.Services.AddScoped<FavoriteService>();
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<CommentService>();
 builder.Services.AddScoped<RecipeIngredientService>();
 builder.Services.AddScoped<IngredientService>();
+builder.Services.AddScoped<FollowerService>();
 
 
 // Add services to the container.

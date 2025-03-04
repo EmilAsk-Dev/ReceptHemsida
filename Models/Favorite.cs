@@ -10,7 +10,7 @@ namespace ReceptHemsida.Models
         public string UserId { get; set; }
 
         [Required]
-        public Guid RecipeId { get; set; }
+        public string RecipeId { get; set; }
 
         [ForeignKey("UserId")]
         public virtual ApplicationUser User { get; set; }

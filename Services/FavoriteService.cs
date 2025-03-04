@@ -47,7 +47,7 @@ namespace ReceptHemsida.Services
             }
         }
 
-        public async Task RemoveFavoriteAsync(string userId, Guid recipeId)
+        public async Task RemoveFavoriteAsync(string userId, string recipeId)
         {
             try
             {
@@ -66,7 +66,7 @@ namespace ReceptHemsida.Services
             }
         }
 
-        public async Task<bool> IsRecipeFavoritedAsync(string userId, Guid recipeId)
+        public async Task<bool> IsRecipeFavoritedAsync(string userId, string recipeId)
         {
             try
             {
@@ -79,26 +79,25 @@ namespace ReceptHemsida.Services
                 return false;
             }
         }
-        public async Task<Dictionary<string,List<Recipe>>> GetAllUserFavoritesAsync()
+
+
+        public async Task<List<Recipe>> GetUserFavoritesAsync(ApplicationUser user)
         {
             try
             {
-                var allFavorites= await _context.Favorites
+                var userFavorites = await _context.Favorites
+                    .Where(f => f.User.Id == user.Id) 
                     .Include(f => f.Recipe)
-                    .Include(f => f.Recipe.User)
                     .ToListAsync();
-                return allFavorites
-                    .GroupBy(f => f.User.UserName)
-                    .ToDictionary(g => g.Key,
-                     g => g.Select(f => f.Recipe).ToList()
-                    );
 
+                return userFavorites.Select(f => f.Recipe).ToList();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error getting user favorites:{ex.Message} ");
-                return new Dictionary<string, List<Recipe>>();
+                Console.WriteLine($"Error getting user favorites: {ex.Message}");
+                return new List<Recipe>();
             }
         }
+
     }
 }

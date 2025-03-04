@@ -33,7 +33,7 @@ namespace ReceptHemsida.Services
             }
         }
 
-        public async Task<Ingredient> GetIngredientByIdAsync(Guid id)
+        public async Task<Ingredient> GetIngredientByIdAsync(string id)
         {
             try
             {
@@ -74,7 +74,7 @@ namespace ReceptHemsida.Services
             }
         }
 
-        public async Task DeleteIngredientAsync(Guid id)
+        public async Task DeleteIngredientAsync(string id)
         {
             try
             {

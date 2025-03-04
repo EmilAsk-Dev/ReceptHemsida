@@ -7,13 +7,13 @@ namespace ReceptHemsida.Models
     public class Comment
     {
         [Key]
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         [Required]
         public string UserId { get; set; }
 
         [Required]
-        public Guid RecipeId { get; set; }
+        public string RecipeId { get; set; }
 
         [Required]
         public string Content { get; set; }

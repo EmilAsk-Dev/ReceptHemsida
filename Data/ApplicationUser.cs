@@ -9,8 +9,8 @@ namespace ReceptHemsida.Data
     {
         [PersonalData]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
         
+
         public virtual ICollection<Recipe> Recipes { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Favorite> Favorites { get; set; }

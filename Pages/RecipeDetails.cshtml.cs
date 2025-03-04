@@ -16,7 +16,7 @@ namespace ReceptHemsida.Pages
         }
         public Recipe Recipe { get; set; }
 
-        public async Task OnGetAsync(Guid id)
+        public async Task OnGetAsync(string id)
         {
             Recipe = await _recipeService.GetRecipeByIdAsync(id);
             if(Recipe == null)

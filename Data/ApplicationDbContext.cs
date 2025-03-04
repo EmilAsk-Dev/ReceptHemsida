@@ -22,22 +22,22 @@ namespace ReceptHemsida.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            
+
+            // Recipe Configuration
+            modelBuilder.Entity<Recipe>()
+                .Property(r => r.Id)
+                .HasDefaultValueSql("NEWID()")
+                .ValueGeneratedOnAdd();
+
+            // Ingredient Configuration
+            modelBuilder.Entity<Ingredient>()
+                .Property(i => i.Id)
+                .HasDefaultValueSql("NEWID()")
+                .ValueGeneratedOnAdd();
+
+            // RecipeIngredient Configuration
             modelBuilder.Entity<RecipeIngredient>()
                 .HasKey(ri => new { ri.RecipeId, ri.IngredientId });
-
-            modelBuilder.Entity<Favorite>()
-                .HasKey(f => new { f.UserId, f.RecipeId });
-
-            modelBuilder.Entity<Follower>()
-                .HasKey(f => new { f.FollowerId, f.FollowingId });
-
-            
-            modelBuilder.Entity<Recipe>()
-                .HasOne(r => r.User)
-                .WithMany(u => u.Recipes)
-                .HasForeignKey(r => r.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<RecipeIngredient>()
                 .HasOne(ri => ri.Recipe)
@@ -51,17 +51,9 @@ namespace ReceptHemsida.Data
                 .HasForeignKey(ri => ri.IngredientId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Comment>()
-                .HasOne(c => c.User)
-                .WithMany(u => u.Comments)
-                .HasForeignKey(c => c.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Comment>()
-                .HasOne(c => c.Recipe)
-                .WithMany(r => r.Comments)
-                .HasForeignKey(c => c.RecipeId)
-                .OnDelete(DeleteBehavior.NoAction); 
+            // Favorite Configuration
+            modelBuilder.Entity<Favorite>()
+                .HasKey(f => new { f.UserId, f.RecipeId });
 
             modelBuilder.Entity<Favorite>()
                 .HasOne(f => f.User)
@@ -73,7 +65,11 @@ namespace ReceptHemsida.Data
                 .HasOne(f => f.Recipe)
                 .WithMany(r => r.Favorites)
                 .HasForeignKey(f => f.RecipeId)
-                .OnDelete(DeleteBehavior.NoAction); 
+                .OnDelete(DeleteBehavior.NoAction);
+
+            // Follower Configuration
+            modelBuilder.Entity<Follower>()
+                .HasKey(f => new { f.FollowerId, f.FollowingId });
 
             modelBuilder.Entity<Follower>()
                 .HasOne(f => f.FollowerUser)
@@ -85,7 +81,20 @@ namespace ReceptHemsida.Data
                 .HasOne(f => f.FollowingUser)
                 .WithMany(u => u.Followers)
                 .HasForeignKey(f => f.FollowingId)
-                .OnDelete(DeleteBehavior.NoAction); 
+                .OnDelete(DeleteBehavior.NoAction);
+
+            // Comment Configuration
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.User)
+                .WithMany(u => u.Comments)
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.Recipe)
+                .WithMany(r => r.Comments)
+                .HasForeignKey(c => c.RecipeId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

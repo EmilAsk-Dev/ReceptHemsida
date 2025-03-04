@@ -7,7 +7,7 @@ namespace ReceptHemsida.Models
     public class Recipe
     {
         [Key]
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         [Required]
         public string UserId { get; set; }
@@ -31,6 +31,8 @@ namespace ReceptHemsida.Models
 
         [ForeignKey("UserId")]
         public virtual ApplicationUser User { get; set; }
+
+
         public virtual ICollection<RecipeIngredient> RecipeIngredients { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Favorite> Favorites { get; set; }
