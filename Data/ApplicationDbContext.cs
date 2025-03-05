@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ReceptHemsida.Models;
 
@@ -17,6 +17,8 @@ namespace ReceptHemsida.Data
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Favorite> Favorites { get; set; }
         public DbSet<Follower> Followers { get; set; }
+        public DbSet<RecipeInstruction> Instructions { get; set; }
+        public DbSet<RecipeInstruction> RecipeInstructions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
