@@ -1,87 +1,173 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using ReceptHemsida.Data;
 using ReceptHemsida.Models;
-using ReceptHemsida.Services;
+using System.Security.Claims;
 
 namespace ReceptHemsida.Pages
 {
     public class TestModel : PageModel
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserService _userService;
 
-        // Constructor to inject dependencies
-        public TestModel(ApplicationDbContext context, UserService userService)
+        public TestModel(ApplicationDbContext context)
         {
             _context = context;
-            _userService = userService;
         }
 
-        // BindProperty for UserId if you want it as input (e.g., in a form)
         [BindProperty]
-        public string UserId { get; set; } = "c968b6bc-5f17-4041-914c-de91bfbbf1a7"; // Default value for testing
+        public Recipe Recipe { get; set; } = new Recipe();
 
-        // This method gets called when the form is submitted
-        public async Task<IActionResult> OnPostCreateDummyRecipes()
+        [BindProperty]
+        public List<RecipeIngredientViewModel> RecipeIngredients { get; set; } = new List<RecipeIngredientViewModel>();
+
+        [BindProperty]
+        public List<RecipeInstructionViewModel> Instructions { get; set; } = new List<RecipeInstructionViewModel>();
+
+        [BindProperty]
+        public string TagsInput { get; set; } = string.Empty;
+
+        public SelectList Categories { get; set; }
+        public SelectList DifficultyLevels { get; set; }
+        public List<Ingredient> AvailableIngredients { get; set; }
+
+        public async Task OnGetAsync()
         {
-            if (string.IsNullOrEmpty(UserId))
+            Categories = new SelectList(Enum.GetValues(typeof(RecipeCategory)));
+            DifficultyLevels = new SelectList(new[] { "Easy", "Medium", "Hard", "Expert" });
+            AvailableIngredients = await _context.Ingredients.ToListAsync();
+
+            
+            for (int i = 0; i < 3; i++)
             {
-                ModelState.AddModelError("", "Please provide a User ID.");
-                return Page();
+                RecipeIngredients.Add(new RecipeIngredientViewModel());
             }
 
-            // Get the user
-            var user = await _userService.GetUserByUsernameAsync("Emil");
-
-            if (user == null)
+            for (int i = 0; i < 3; i++)
             {
-                ModelState.AddModelError("", "User not found.");
-                return Page();
+                Instructions.Add(new RecipeInstructionViewModel { StepNumber = i + 1 });
             }
-
-            // Create a dummy recipe
-            var recipe = new Recipe
-            {
-                UserId = UserId,
-                Title = "Pancakes",
-                Description = "Delicious fluffy pancakes.",
-                Category = RecipeCategory.Breakfast,
-                CookTime = 20,
-                Difficulty = "Easy",
-                Instructions = new List<RecipeInstruction>
-        {
-            new RecipeInstruction
-            {
-                StepNumber = 1,
-                InstructionText = "Mix ingredients."
-            },
-            new RecipeInstruction
-            {
-                StepNumber = 2,
-                InstructionText = "Cook on a hot pan."
-            }
-        },
-                Tags = new List<string> { "Breakfast", "Easy" }
-            };
-
-            // Save the recipe first, which will generate the Id
-            _context.Recipes.Add(recipe);
-            await _context.SaveChangesAsync();  // Save the recipe and get the generated RecipeId
-
-            // Now create RecipeInstructions that reference the saved recipe's Id
-            foreach (var instruction in recipe.Instructions)
-            {
-                instruction.RecipeId = recipe.Id;  // Set the RecipeId to the generated Id
-                _context.RecipeInstructions.Add(instruction);
-            }
-
-            // Save the instructions
-            await _context.SaveChangesAsync();
-
-            return RedirectToPage("/Index");  // Redirect after success
         }
 
-    }
+        public async Task<IActionResult> OnPostAsync()
+        {
+            
+            ModelState.Remove("Recipe.Id");
+            ModelState.Remove("Recipe.UserId");
+            ModelState.Remove("Recipe.User");
+            ModelState.Remove("Recipe.ImageUrl");
+            ModelState.Remove("Recipe.Instructions");
+            ModelState.Remove("Recipe.RecipeIngredients");
 
+            if (!ModelState.IsValid)
+            {
+                
+                foreach (var modelState in ModelState.Where(ms => ms.Value.Errors.Any()))
+                {
+                    var key = modelState.Key;
+                    var errors = modelState.Value.Errors.Select(e => e.ErrorMessage);
+                    
+                }
+
+                Categories = new SelectList(Enum.GetValues(typeof(RecipeCategory)));
+                DifficultyLevels = new SelectList(new[] { "Easy", "Medium", "Hard", "Expert" });
+                AvailableIngredients = await _context.Ingredients.ToListAsync();
+                return Page();
+            }
+
+            
+            Recipe.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Recipe.Id = Guid.NewGuid().ToString();
+            Recipe.CreatedAt = DateTime.UtcNow;
+
+            
+            Recipe.Tags ??= new List<string>();
+
+            
+            if (!string.IsNullOrWhiteSpace(TagsInput))
+            {
+                Recipe.Tags = TagsInput.Split(',')
+                    .Select(t => t.Trim())
+                    .Where(t => !string.IsNullOrEmpty(t))
+                    .ToList();
+            }
+
+            
+            _context.Recipes.Add(Recipe);
+
+            
+            foreach (var item in RecipeIngredients.Where(i => !string.IsNullOrEmpty(i.IngredientName) && !string.IsNullOrEmpty(i.Quantity)))
+            {
+                
+                var ingredient = await _context.Ingredients.FirstOrDefaultAsync(i => i.Name.ToLower() == item.IngredientName.ToLower());
+
+                
+                if (ingredient == null)
+                {
+                    ingredient = new Ingredient
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Name = item.IngredientName
+                    };
+                    _context.Ingredients.Add(ingredient);
+                }
+
+                
+                var recipeIngredient = new RecipeIngredient
+                {
+                    RecipeId = Recipe.Id,
+                    IngredientId = ingredient.Id,
+                    Quantity = item.Quantity,
+                    Unit = item.Unit ?? string.Empty
+                };
+
+                _context.RecipeIngredients.Add(recipeIngredient);
+            }
+
+            
+            foreach (var instruction in Instructions.Where(i => !string.IsNullOrEmpty(i.InstructionText)))
+            {
+                var recipeInstruction = new RecipeInstruction
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    RecipeId = Recipe.Id,
+                    StepNumber = instruction.StepNumber,
+                    InstructionText = instruction.InstructionText
+                };
+
+                _context.RecipeInstructions.Add(recipeInstruction);
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return RedirectToPage("/Index");
+            }
+            catch (Exception ex)
+            {
+                
+                ModelState.AddModelError(string.Empty, "An error occurred while saving: " + ex.Message);
+
+                Categories = new SelectList(Enum.GetValues(typeof(RecipeCategory)));
+                DifficultyLevels = new SelectList(new[] { "Easy", "Medium", "Hard", "Expert" });
+                AvailableIngredients = await _context.Ingredients.ToListAsync();
+                return Page();
+            }
+        }
+
+        public class RecipeIngredientViewModel
+        {
+            public string IngredientName { get; set; }
+            public string Quantity { get; set; }
+            public string Unit { get; set; }
+        }
+
+        public class RecipeInstructionViewModel
+        {
+            public int StepNumber { get; set; }
+            public string InstructionText { get; set; }
+        }
+    }
 }
