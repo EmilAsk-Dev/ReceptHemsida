@@ -4,101 +4,109 @@
     ViewData["Title"] = "User Profile";
     Layout = "~/Pages/Shared/_Layout.cshtml";
     bool isCurrentUserProfile = Model.IsCurrentUserProfile;
+    bool UserExist = Model.UserExist;
 }
 
-<!-- User Profile Header -->
-<section class="container">
-    <div class="user-profile-header">
-        <div class="user-avatar">
-            @* <img src="@Model.ProfileUser.ProfileImageUrl" alt="@Model.ProfileUser.UserName Profile Picture"> *@
+@if (!UserExist)
+{
+    <a>Sorry this user dosent exist</a>
+}
+else{
+    <!-- User Profile Header -->
+    <section class="container">
+        <div class="user-profile-header">
+            <div class="user-avatar">
+                @* <img src="@Model.ProfileUser.ProfileImageUrl" alt="@Model.ProfileUser.UserName Profile Picture"> *@
+            </div>
+            <div class="user-info">
+                <h1>@Model.ProfileUser.UserName's Profile</h1>
+                @if (isCurrentUserProfile)
+                {
+                    <p>This is your personal profile</p>
+                }
+                <div class="user-stats">
+                    <span>Recipes Created: @Model.CreatedRecipes.Count</span>
+                    <span>Saved Recipes: @Model.SavedRecipes.Count</span>
+                </div>
+            </div>
         </div>
-        <div class="user-info">
-            <h1>@Model.ProfileUser.UserName's Profile</h1>
-            @if (isCurrentUserProfile)
+    </section>
+
+    <!-- Created Recipes Section -->
+    <section class="container">
+        <h2 class="section-title">Recipes Created by @Model.ProfileUser.UserName</h2>
+        <div class="recipes">
+            @foreach (var recipe in Model.CreatedRecipes)
             {
-                <p>This is your personal profile</p>
+                <div class="recipe-card">
+                    <img src="@recipe.ImageUrl" alt="@recipe.Title" class="recipe-img">
+                    <div class="recipe-content">
+                        <h3 class="recipe-title">@recipe.Title</h3>
+                        <div class="recipe-meta">
+                            <span>@recipe.CookTime min</span>
+                            <span>@recipe.Difficulty</span>
+                        </div>
+                        <p class="recipe-desc">@recipe.Description</p>
+                        <div class="recipe-footer">
+                            <div class="recipe-tags">
+                                @foreach (var tag in recipe.Tags)
+                                {
+                                    <span class="recipe-tag">@tag</span>
+                                }
+                            </div>
+                            <a href="/recipe/details/@recipe.Id" class="btn">View Recipe</a>
+                        </div>
+                    </div>
+                    @if (isCurrentUserProfile)
+                    {
+                        <div class="recipe-owner-actions">
+                            <a href="/recipe/edit/@recipe.Id" class="btn btn-edit">Edit</a>
+                            <form method="post" asp-page-handler="DeleteRecipe">
+                                <input type="hidden" name="recipeId" value="@recipe.Id" />
+                                <button type="submit" class="btn btn-delete">Delete</button>
+                            </form>
+                        </div>
+                    }
+                </div>
             }
-            <div class="user-stats">
-                <span>Recipes Created: @Model.CreatedRecipes.Count</span>
-                <span>Saved Recipes: @Model.SavedRecipes.Count</span>
-            </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- Created Recipes Section -->
-<section class="container">
-    <h2 class="section-title">Recipes Created by @Model.ProfileUser.UserName</h2>
-    <div class="recipes">
-        @foreach (var recipe in Model.CreatedRecipes)
-        {
-            <div class="recipe-card">
-                <img src="@recipe.ImageUrl" alt="@recipe.Title" class="recipe-img">
-                <div class="recipe-content">
-                    <h3 class="recipe-title">@recipe.Title</h3>
-                    <div class="recipe-meta">
-                        <span>@recipe.CookTime min</span>
-                        <span>@recipe.Difficulty</span>
-                    </div>
-                    <p class="recipe-desc">@recipe.Description</p>
-                    <div class="recipe-footer">
-                        <div class="recipe-tags">
-                            @foreach (var tag in recipe.Tags)
-                            {
-                                <span class="recipe-tag">@tag</span>
-                            }
+    <!-- Saved Recipes Section -->
+    <section class="container">
+        <h2 class="section-title">@(isCurrentUserProfile ? "Your Saved Recipes" : $"Recipes Saved by {Model.ProfileUser.UserName}")</h2>
+        <div class="recipes-container">
+            @foreach (var recipe in Model.SavedRecipes)
+            {
+                <div class="recipe-card">
+                    <img src="@recipe.ImageUrl" alt="@recipe.Title" class="recipe-img">
+                    <div class="recipe-content">
+                        <h3 class="recipe-title">@recipe.Title</h3>
+                        <div class="recipe-meta">
+                            <span>@recipe.CookTime min</span>
+                            <span>@recipe.Difficulty</span>
                         </div>
-                        <a href="/recipe/details/@recipe.Id" class="btn">View Recipe</a>
+                        <p class="recipe-desc">@recipe.Description</p>
+                        <div class="recipe-footer">
+                            <div class="recipe-tags">
+                                @foreach (var tag in recipe.Tags)
+                                {
+                                    <span class="recipe-tag">@tag</span>
+                                }
+                            </div>
+                            <a href="/recipe/details/@recipe.Id" class="btn">View Recipe</a>
+                        </div>
                     </div>
-                </div>
-                @if (isCurrentUserProfile)
-                {
-                    <div class="recipe-owner-actions">
-                        <a href="/recipe/edit/@recipe.Id" class="btn btn-edit">Edit</a>
-                        <form method="post" asp-page-handler="DeleteRecipe">
+                    @if (isCurrentUserProfile)
+                    {
+                        <form method="post" asp-page-handler="RemoveFavorite">
                             <input type="hidden" name="recipeId" value="@recipe.Id" />
-                            <button type="submit" class="btn btn-delete">Delete</button>
+                            <button type="submit" class="btn btn-delete">Remove</button>
                         </form>
-                    </div>
-                }
-            </div>
-        }
-    </div>
-</section>
-
-<!-- Saved Recipes Section -->
-<section class="container">
-    <h2 class="section-title">@(isCurrentUserProfile ? "Your Saved Recipes" : $"Recipes Saved by {Model.ProfileUser.UserName}")</h2>
-    <div class="recipes-container">
-        @foreach (var recipe in Model.SavedRecipes)
-        {
-            <div class="recipe-card">
-                <img src="@recipe.ImageUrl" alt="@recipe.Title" class="recipe-img">
-                <div class="recipe-content">
-                    <h3 class="recipe-title">@recipe.Title</h3>
-                    <div class="recipe-meta">
-                        <span>@recipe.CookTime min</span>
-                        <span>@recipe.Difficulty</span>
-                    </div>
-                    <p class="recipe-desc">@recipe.Description</p>
-                    <div class="recipe-footer">
-                        <div class="recipe-tags">
-                            @foreach (var tag in recipe.Tags)
-                            {
-                                <span class="recipe-tag">@tag</span>
-                            }
-                        </div>
-                        <a href="/recipe/details/@recipe.Id" class="btn">View Recipe</a>
-                    </div>
+                    }
                 </div>
-                @if (isCurrentUserProfile)
-                {
-                    <form method="post" asp-page-handler="RemoveFavorite">
-                        <input type="hidden" name="recipeId" value="@recipe.Id" />
-                        <button type="submit" class="btn btn-delete">Remove</button>
-                    </form>
-                }
-            </div>
-        }
-    </div>
-</section>
+            }
+        </div>
+    </section>
+}
+
