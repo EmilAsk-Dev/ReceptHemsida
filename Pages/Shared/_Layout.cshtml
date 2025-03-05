@@ -24,6 +24,8 @@
                 <div class="nav-links">
                     @if (SignInManager.IsSignedIn(User))
                     {
+                        var currentUser = await UserManager.GetUserAsync(User);
+
                         <a href="#">Add Recipe</a>
                         <a href="#">Manage Categories</a>
 
@@ -31,7 +33,12 @@
                             <button type="submit">Logout</button>
                         </form>
 
-                        <form method="get" asp-page="/UserSettings">
+
+                        <form method="get" asp-page="/User" asp-route-username="@currentUser.UserName">
+                            <button type="submit">@currentUser.UserName</button>
+                        </form>
+
+                        <form method="get" asp-page="/Usersettings">
                             <button type="submit">User settings</button>
                         </form>
                     }
