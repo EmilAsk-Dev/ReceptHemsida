@@ -24,7 +24,7 @@ namespace ReceptHemsida.Models
         public RecipeCategory Category { get; set; }
 
         public int CookTime { get; set; }
-
+        
         public string Difficulty { get; set; }
         // Relation till instruktionerna
         public virtual ICollection<RecipeInstruction> Instructions { get; set; } = new List<RecipeInstruction>();
