@@ -1,40 +1,156 @@
-﻿@page
+﻿@page "{RecipeId?}"
 @model ReceptHemsida.Pages.addRecipeModel
 @{
-	ViewData["Title"] = "addRecipe";
-
+    ViewData["Title"] = "Lägg till Recept";
 }
-<form method="post">
-	@* Receptinformation *@
-	<label for="Title">Titel:</label>
-	<input type="text" asp-for="Recipe.Title" required/>
 
-   @*Beskrivning *@
-	<label for="Description">Beskrivning</label>
-	<textarea asp-for="Recipe.Description" required></textarea>
+<div class="recipe-container">
+    <div class="recipe-header">
+        <div class="recipe-image">
+            <img src="recipe-image.jpg" alt="Kefta tagine">
+        </div>
+        <div class="recipe-info">
+            <h1 id="recipe-title" contenteditable="true" onfocus="clearPlaceholder()" onblur="setPlaceholder()">@Model.Recipe.Title</h1>
+            <div class="recipe-meta">
+                <div class="rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="rating-count">(25)</span>
+                </div>
+                <div class="recipe-stats">
+                    <span>1 timme</span>
+                    <span>250 kcal</span>
+                    <span>4 portioner</span>
+                </div>
+            </div>
+            <p class="recipe-description">
+                Läckra marockanska kift med kryddiga köttbullar i mumsig tomatsås som toppass med ägg. Vår kär gamla tagine inspirerade av traditionell marockansk matlagning där kött och kryddor gifter sig vackert med grönsaker.
+            </p>
+        </div>
+    </div>
 
-	@* Tillagningstid *@
-	<label for="CookTime">Tillagningstid (minuter):</label>
-	<input type="number" asp-for="Recipe.CookTime" required />
+    <div class="recipe-content">
+        <div class="ingredients-section">
+            <h2>Ingredienser</h2>
+            <div class="ingredient-list">
+                <div class="ingredient-group">
+                    <h3>Tomatsås</h3>
+                    <ul>
+                        <li>
+                            <span>2 msk olivolja</span>
+                            <button class="remove-ingredient">✖</button>
+                        </li>
+                        <li>
+                            <span>1 gul lök</span>
+                            <button class="remove-ingredient">✖</button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="ingredient-group">
+                    <h3>Köttbullar</h3>
+                    <ul>
+                        <li>
+                            <span>500g köttfärs</span>
+                            <button class="remove-ingredient">✖</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="servings-control">
+                <button class="decrease-servings">-</button>
+                <span class="servings">4 portioner</span>
+                <button class="increase-servings">+</button>
+            </div>
+        </div>
 
-	@* Svårighetsgrad *@
-	<label for="Difficulty">Svårighetsgrad:</label>
-	<select asp-for="Recipe.Difficulty">
-		<option value="Easy">Easy</option>
-		<option value="Medium">Medium</option>
-		<option value="Hard">Hard</option>
-	</select>
+        <form method="post" id="addRecipeForm">
+            <div class="instructions-section">
+                <h2>Gör så här</h2>
+                <ul class="instructions-list">
+                    @foreach (var instruction in Model.RecipeInstructionList)
+                    {
+                        <li>
+                            <div class="instruction-step">
+                                <p>@instruction.InstructionText</p>
+                                <button type="submit" class="remove-step" name="removeInstruction" value="@instruction.Id">✖</button>
+                            </div>
+                        </li>
+                    }
+                </ul>
+                <button type="button" id="add-instruction-btn">Lägg till instruktion</button>
+            </div>
 
+            <div class="submit-section">
+                <button type="submit" id="submitRecipeBtn">Lägg till recept</button>
+            </div>
+        </form>
+    </div>
 
-	@* Instruktioner *@
-	<h3>Instructions</h3>
-	<div id="instructionsContainer"></div>
-	<button type="button" id="addInstruction">Add instructions:</button>
+    <div class="recipe-tags">
+        <h3>Taggar</h3>
+        <div class="tags-list">
+            <span class="tag">Middag</span>
+            <span class="tag">Marockanskt</span>
+            <span class="tag">Kötträtt</span>
+        </div>
+    </div>
 
-	<button type="submit">Save Recipe</button>
+    <div class="recipe-serving-suggestion">
+        <h3>Serveringsförslag</h3>
+        <p>Servera gärna med kokat ris eller couscous. Lite färsk koriander över kan göra susen!</p>
+    </div>
+</div>
 
-	
-</form>
+@section Scripts {
+    <script>
+        // Get the button to add new instruction
+        const addInstructionBtn = document.getElementById('add-instruction-btn');
 
+        // Event listener to create new instruction row
+        addInstructionBtn.addEventListener('click', () => {
+            // Create new list item for instruction
+            const newInstructionItem = document.createElement('li');
+            newInstructionItem.innerHTML = `
+                <div class="instruction-step">
+                    <p contenteditable="true" class="instruction-text">Skriv din instruktion här...</p>
+                    <button class="remove-step">✖</button>
+                </div>
+            `;
+            // Append the new instruction item to the list
+            document.querySelector('.instructions-list').appendChild(newInstructionItem);
+        });
 
+        // Event delegation for handling remove instruction button
+        document.querySelector('.instructions-list').addEventListener('click', (e) => {
+            if (e.target && e.target.classList.contains('remove-step')) {
+                // Remove the instruction item
+                e.target.closest('li').remove();
+            }
+        });
 
+        // Validation before form submission
+        document.getElementById('addRecipeForm').addEventListener('submit', (e) => {
+            let isValid = true;
+            const title = document.getElementById('recipe-title').textContent.trim();
+            const instructions = document.querySelectorAll('.instruction-text');
+
+            // Check if title is empty
+            if (title === "") {
+                alert("Title is required!");
+                isValid = false;
+            }
+
+            // Check if there are any empty instructions
+            instructions.forEach((instruction, index) => {
+                if (instruction.textContent.trim() === "") {
+                    alert(`Instruction #${index + 1} is required!`);
+                    isValid = false;
+                }
+            });
+
+            // Prevent form submission if validation fails
+            if (!isValid) {
+                e.preventDefault();
+            }
+        });
+    </script>
+}

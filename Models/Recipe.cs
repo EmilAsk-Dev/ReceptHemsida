@@ -29,7 +29,7 @@ namespace ReceptHemsida.Models
         // Relation till instruktionerna
         public virtual ICollection<RecipeInstruction> Instructions { get; set; } = new List<RecipeInstruction>();
         public List<string> Tags { get; set; }= new List<string>();
-        public string ImageUrl => $"/images/{Title.Replace(" ", "").ToLower()}.jpg";
+        public string ImageUrl => null;
 
         [ForeignKey("UserId")]
         public virtual ApplicationUser User { get; set; }
