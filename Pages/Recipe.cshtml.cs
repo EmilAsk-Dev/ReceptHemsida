@@ -5,19 +5,23 @@ using ReceptHemsida.Services;
 
 namespace ReceptHemsida.Pages
 {
-    public class AllRecipeModel : PageModel
+    public class RecipeModel : PageModel
     {
         private readonly RecipeService _recipeService;
 
-        public AllRecipeModel(RecipeService recipeService)
+
+        [BindProperty(SupportsGet = true)]
+        public string Search { get; set; }
+
+        public RecipeModel(RecipeService recipeService)
         {
             _recipeService = recipeService;
         }
-        public List<Recipe> AllRecipes { get; set; } = new();
+        public List<Recipe> Recipes { get; set; } = new();
        
         public async Task OnGetAsync()
         {
-            AllRecipes = await _recipeService.GetAllRecipesAsync();
+            Recipes = await _recipeService.GetAllRecipesAsync();
         }
     }
 }
