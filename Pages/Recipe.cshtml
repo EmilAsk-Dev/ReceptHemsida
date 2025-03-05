@@ -1,80 +1,62 @@
-﻿
-
-
-@page
+﻿@page
 @model ReceptHemsida.Pages.RecipeModel
 @{
     ViewData["Title"] = "All Recipes";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
-<!-- HEADER SECTION -->
-<div class="container-fluid text-center py-5" style="background: rgb(16, 121, 16); color: white;">
-    <h1 class="display-4 fw-bold">Explore Our Recipes</h1>
-    <p class="lead">Find delicious recipes that match your taste and preferences</p>
-</div>
+<!-- Hero Section with Background Image -->
+<div class="hero-section text-center position-relative">
+    <div class="overlay"></div>
+    <div class="container-fluid position-relative text-white py-5">
 
-<!-- FILTER SECTION -->
-<div class="container mt-4">
-    <div class="card p-4 mb-4 shadow-lg border-0">
-        <h4 class="mb-3 text-center text-primary fw-bold">Find Your Perfect Recipe</h4>
-        <div class="row">
-            <div class="col-md-4">
-                <label for="categoryFilter" class="form-label fw-bold">Category:</label>
-                <select id="categoryFilter" class="form-select">
-                    <option value="all">All Categories</option>
-                    @foreach (var category in Enum.GetValues(typeof(ReceptHemsida.Models.RecipeCategory)))
-                    {
-                        <option value="@category">@category</option>
-                    }
-                </select>
-            </div>
+        <!-- Title Above Search -->
+        <h1 class="fw-bold search-title">Search recipe</h1>
 
-            <div class="col-md-4">
-                <label for="timeFilter" class="form-label fw-bold">Cooking Time:</label>
-                <select id="timeFilter" class="form-select">
-                    <option value="all">Choose Time</option>
-                    <option value="15">Under 15 min</option>
-                    <option value="30">Under 30 min</option>
-                    <option value="60">Under 60 min</option>
-                    <option value="120">Under 2 hours</option>
-                </select>
-            </div>
-
-            <div class="col-md-4">
-                <label for="searchTitle" class="form-label fw-bold">Search by Title:</label>
-                <input type="text" id="searchTitle" class="form-control" placeholder="Enter recipe title">
-            </div>
+        <!-- Search Input Centered -->
+        <div class="search-container">
+            <input type="text" class="form-control search-input" placeholder="Search recipe of your choice...">
+            <button class="btn search-btn"><i class="fas fa-search"></i></button>
         </div>
     </div>
 
-    <!-- RECIPES GRID -->
-    <div class="row">
-        @foreach (var recipe in Model.Recipes)
-        {
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 shadow-lg border-0 rounded">
-                    <img src="@(string.IsNullOrEmpty(recipe.ImageUrl) ? "/images/default-recipe.jpg" : recipe.ImageUrl)"
-                         class="card-img-top rounded-top" alt="@recipe.Title" style="height: 200px; object-fit: cover;">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title fw-bold text-primary">@recipe.Title</h5>
-                        <p class="card-text text-muted flex-grow-1">@recipe.Description</p>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><strong>⏱ @recipe.CookTime min</strong></li>
-                            <li class="list-group-item"><strong>🏆 @recipe.Difficulty</strong></li>
-                            <li class="list-group-item"><strong>📌 @recipe.Category</strong></li>
-                        </ul>
-                    </div>
-                    <div class="card-footer bg-white text-center">
-                        <a href="/recipe/details/@recipe.Id" class="btn btn-primary w-100 rounded-pill fw-bold">🍴 View Recipe</a>
-                    </div>
+    <!-- Filter Section Below Search -->
+    <div class="container filter-container">
+        <div class="filter-card p-3">
+            <h4 class="mb-3 text-center fw-bold filter-title">Filter Your Recipes</h4>
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <label for="categoryFilter" class="form-label filter-label">Category:</label>
+                    <select id="categoryFilter" class="form-select">
+                        <option value="all">All Categories</option>
+                        @foreach (var category in Enum.GetValues(typeof(ReceptHemsida.Models.RecipeCategory)))
+                        {
+                            <option value="@category">@category</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="timeFilter" class="form-label filter-label">Cooking Time:</label>
+                    <select id="timeFilter" class="form-select">
+                        <option value="all">Select Time</option>
+                        <option value="15">Under 15 min</option>
+                        <option value="30">Under 30 min</option>
+                        <option value="60">Under 60 min</option>
+                        <option value="120">Under 2 hours</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="difficultyFilter" class="form-label filter-label">Difficulty:</label>
+                    <select id="difficultyFilter" class="form-select">
+                        <option value="all">All Levels</option>
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
                 </div>
             </div>
-        }
-    </div>
-
-    <!-- NO RECIPES MESSAGE -->
-    <div id="noRecipesMessage" class="alert alert-warning text-center mt-4 d-none">
-        <p>No recipes were found with the selected filters.</p>
+        </div>
     </div>
 </div>
