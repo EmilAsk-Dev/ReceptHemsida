@@ -6,19 +6,24 @@
 
 <div class="reg-container">
 
-<form class="reg-form" autocomplete="off">
+<form class="reg-form" autocomplete="off" method="post">
 	<p class="reg-title">Register</p>
 
 	<div class="form-group">
 		<label>
-			<input asp-for="Input.Username" required />
+				<input asp-for="Input.Firstname" required />
 			<span>Firstname</span>
 		</label>
 		<label>
-			<input required />
+			<input asp-for="Input.Lastname" required />
 			<span>Lastname</span>
 		</label>
 	</div>
+
+		<label>
+			<input asp-for="Input.Username" required />
+			<span>Username</span>
+		</label>
 
 	<label>
 		<input asp-for="Input.Email" type="email" required />
@@ -44,7 +49,7 @@
 		</span>
 	</div>
 
-	<button class="submit" type="submit">Register</button>
+	<button class="post" type="submit" onclick="">Register</button>
 </form>
 <!-- YouTube-video -->
 <div class="video-container">

@@ -19,21 +19,30 @@ namespace ReceptHemsida.Pages
         public List<Recipe> SavedRecipes { get; set; }
 
         public bool IsCurrentUserProfile { get; set; }
+        public bool UserExist { get; set; } = true;
 
-        public UserModel(UserService userService, RecipeService recipeService, UserManager<ApplicationUser> userManager)
+        public UserModel(UserService userService, RecipeService recipeService, UserManager<ApplicationUser> userManager, FavoriteService favoriteService)
         {
             _userService = userService;
             _recipeService = recipeService;
             _userManager = userManager;
+            _favoriteSerive = favoriteService;
         }
 
         public async Task<IActionResult> OnGet(string username)
         {
-            ProfileUser = await _userService.GetUserByUsernameAsync(username);
-
-            if (ProfileUser == null)
+            try
             {
-                return NotFound("User not found");
+                ProfileUser = await _userService.GetUserByUsernameAsync(username);
+                if(ProfileUser == null)
+                {
+                    UserExist = false;
+                    return Page();
+                }
+            }
+            catch (Exception ex)
+            {                
+                return Page();                
             }
 
             var currentUser = await _userManager.GetUserAsync(User);

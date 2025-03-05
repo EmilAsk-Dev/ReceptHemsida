@@ -1,142 +1,156 @@
-﻿@page
-@model ReceptHemsida.Pages.AddRecipeModel
+﻿@page "{RecipeId?}"
+@model ReceptHemsida.Pages.addRecipeModel
 @{
-	ViewData["Title"] = "addRecipe";
-
+    ViewData["Title"] = "Lägg till Recept";
 }
-<div class="container my-5">
-   <div class="recipe-header">
-   
-    <form style="text-align:center;" method="post" enctype="multipart/form-data">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-md-8">
-                        <h1 class="mb-4 text-center text-nowrap" style="font-weight:bold">Add New Recipe</h1>
-                    </div>
+<div class="recipe-container">
+    <div class="recipe-header">
+        <div class="recipe-image">
+            <img src="recipe-image.jpg" alt="Kefta tagine">
+        </div>
+        <div class="recipe-info">
+            <h1 id="recipe-title" contenteditable="true" onfocus="clearPlaceholder()" onblur="setPlaceholder()">@Model.Recipe.Title</h1>
+            <div class="recipe-meta">
+                <div class="rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="rating-count">(25)</span>
+                </div>
+                <div class="recipe-stats">
+                    <span>1 timme</span>
+                    <span>250 kcal</span>
+                    <span>4 portioner</span>
                 </div>
             </div>
+            <p class="recipe-description">
+                Läckra marockanska kift med kryddiga köttbullar i mumsig tomatsås som toppass med ägg. Vår kär gamla tagine inspirerade av traditionell marockansk matlagning där kött och kryddor gifter sig vackert med grönsaker.
+            </p>
+        </div>
+    </div>
 
-            <div class="row">
-
-            <div class="col-md-8">
-                <div class="form-floating mb-3">
-                    <input asp-for="Recipe.Title" class="form-control" placeholder="Recipe Title" />
-                    <label asp-for="Recipe.Title">Recipe Title</label>
-                    <span asp-validation-for="Recipe.Title" class="text-danger"></span>
+    <div class="recipe-content">
+        <div class="ingredients-section">
+            <h2>Ingredienser</h2>
+            <div class="ingredient-list">
+                <div class="ingredient-group">
+                    <h3>Tomatsås</h3>
+                    <ul>
+                        <li>
+                            <span>2 msk olivolja</span>
+                            <button class="remove-ingredient">✖</button>
+                        </li>
+                        <li>
+                            <span>1 gul lök</span>
+                            <button class="remove-ingredient">✖</button>
+                        </li>
+                    </ul>
                 </div>
-
-                <div class="form-floating mb-3">
-                    <textarea asp-for="Recipe.Description" class="form-control" style="height: 100px" placeholder="Description"></textarea>
-                    <label asp-for="Recipe.Description">Description</label>
-                    <span asp-validation-for="Recipe.Description" class="text-danger"></span>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-floating mb-3">
-                            <input asp-for="Recipe.CookTime" class="form-control" placeholder="Cook Time (minutes)" />
-                            <label asp-for="Recipe.CookTime">Cook Time (minutes)</label>
-                            <span asp-validation-for="Recipe.CookTime" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-floating mb-3">
-                            <select asp-for="Recipe.Difficulty" class="form-select" aria-label="Difficulty">
-                                <option value="">-- Select Difficulty --</option>
-                                <option value="Easy">Easy</option>
-                                <option value="Medium">Medium</option>
-                                <option value="Hard">Hard</option>
-                            </select>
-                            <label asp-for="Recipe.Difficulty">Difficulty</label>
-                            <span asp-validation-for="Recipe.Difficulty" class="text-danger"></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-floating mb-3">
-                    <select asp-for="Recipe.Category" asp-items="Model.Categories" class="form-select" aria-label="Category">
-                        <option value="">-- Select Category --</option>
-							
-                    </select>
-                    <label asp-for="Recipe.Category">Category</label>
-                    <span asp-validation-for="Recipe.Category" class="text-danger"></span>
-                </div>
-
-                <div class="add-tag">
-                    <label asp-for="Recipe.Tags" class="form-label">Tags</label>
-                    <div class="input-group">
-                        <input id="tagInput" type="text" class="form-control" placeholder="Add tag and press Enter" />
-                        <button id="addTag" type="button" class="btn btn-outline-secondary">Add</button>
-                    </div>
-                    <div id="tagsContainer" class="d-flex flex-wrap gap-2 mt-2"></div>
-                    <input type="hidden" id="tagsData" name="Recipe.Tags" />
+                <div class="ingredient-group">
+                    <h3>Köttbullar</h3>
+                    <ul>
+                        <li>
+                            <span>500g köttfärs</span>
+                            <button class="remove-ingredient">✖</button>
+                        </li>
+                    </ul>
                 </div>
             </div>
-
-            <div class="col-md-4">
-                <div class="col-md-4 order-md-2">
-                        <label for="UploadedImage" class="form-label text-center text-nowrap">Share your Recipe Image:</label>
-                    <input style="width:350px;" id="UploadedImage" name="UploadedImage" type="file" class="form-control" accept="image/*" />
-                </div>
-                <div style="width:350px;" class="image-preview-container mb-3">
-                    <img id="imagePreview" src="/images/recipe-placeholder.jpg" class="img-thumbnail" style="max-height: 200px; width: 100%; object-fit: cover;" />
-                </div>
+            <div class="servings-control">
+                <button class="decrease-servings">-</button>
+                <span class="servings">4 portioner</span>
+                <button class="increase-servings">+</button>
             </div>
         </div>
 
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <h3>Ingredients</h3>
-                <div id="ingredientList">
-                    <div class="ingredient-entry mb-2">
-                        <div class="row g-2">
-                            <div class="col-md-3">
-                                <div class="form-floating">
-                                    <input type="text" name="Ingredients[0].Quantity" class="form-control" placeholder="Amount" />
-                                    <label>Amount</label>
-                                </div>
+        <form method="post" id="addRecipeForm">
+            <div class="instructions-section">
+                <h2>Gör så här</h2>
+                <ul class="instructions-list">
+                    @foreach (var instruction in Model.RecipeInstructionList)
+                    {
+                        <li>
+                            <div class="instruction-step">
+                                <p>@instruction.InstructionText</p>
+                                <button type="submit" class="remove-step" name="removeInstruction" value="@instruction.Id">✖</button>
                             </div>
-                            <div class="col-md-3">
-                                <div class="form-floating">
-                                    <input type="text" name="Ingredients[0].Unit" class="form-control" placeholder="Unit" />
-                                    <label>Unit</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="text" name="Ingredients[0].Name" class="form-control" placeholder="Ingredient" />
-                                    <label>Ingredient</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                    <button type="button" id="addIngredient" class="btn btn-outline-secondary">
-                    <i class="bi bi-plus-circle"></i> Add Ingredient
-                </button>
+                        </li>
+                    }
+                </ul>
+                <button type="button" id="add-instruction-btn">Lägg till instruktion</button>
             </div>
 
-            <div class="col-md-6">
-                <h3>Instructions</h3>
-                <div id="instructionList">
-                    <div class="instruction-entry form-floating mb-2">
-                        <textarea name="Instructions[0].Step" class="form-control" style="height: 80px" placeholder="Step description"></textarea>
-                        <label>Step #1</label>
-                    </div>
-                </div>
-                    <button type="button" id="addInstruction" class="btn btn-outline-secondary">
-                    <i class="bi bi-plus-circle"></i> Add Step
-                </button>
+            <div class="submit-section">
+                <button type="submit" id="submitRecipeBtn">Lägg till recept</button>
             </div>
-        </div>
+        </form>
+    </div>
 
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-5">
-            <a asp-page="./Index" class="btn btn-outline-secondary me-md-2">Cancel</a>
-                <button type="submit" class="btn btn-outline-secondary">Save Recipe</button>
+    <div class="recipe-tags">
+        <h3>Taggar</h3>
+        <div class="tags-list">
+            <span class="tag">Middag</span>
+            <span class="tag">Marockanskt</span>
+            <span class="tag">Kötträtt</span>
         </div>
-    </form>
+    </div>
+
+    <div class="recipe-serving-suggestion">
+        <h3>Serveringsförslag</h3>
+        <p>Servera gärna med kokat ris eller couscous. Lite färsk koriander över kan göra susen!</p>
     </div>
 </div>
 
+@section Scripts {
+    <script>
+        // Get the button to add new instruction
+        const addInstructionBtn = document.getElementById('add-instruction-btn');
+
+        // Event listener to create new instruction row
+        addInstructionBtn.addEventListener('click', () => {
+            // Create new list item for instruction
+            const newInstructionItem = document.createElement('li');
+            newInstructionItem.innerHTML = `
+                <div class="instruction-step">
+                    <p contenteditable="true" class="instruction-text">Skriv din instruktion här...</p>
+                    <button class="remove-step">✖</button>
+                </div>
+            `;
+            // Append the new instruction item to the list
+            document.querySelector('.instructions-list').appendChild(newInstructionItem);
+        });
+
+        // Event delegation for handling remove instruction button
+        document.querySelector('.instructions-list').addEventListener('click', (e) => {
+            if (e.target && e.target.classList.contains('remove-step')) {
+                // Remove the instruction item
+                e.target.closest('li').remove();
+            }
+        });
+
+        // Validation before form submission
+        document.getElementById('addRecipeForm').addEventListener('submit', (e) => {
+            let isValid = true;
+            const title = document.getElementById('recipe-title').textContent.trim();
+            const instructions = document.querySelectorAll('.instruction-text');
+
+            // Check if title is empty
+            if (title === "") {
+                alert("Title is required!");
+                isValid = false;
+            }
+
+            // Check if there are any empty instructions
+            instructions.forEach((instruction, index) => {
+                if (instruction.textContent.trim() === "") {
+                    alert(`Instruction #${index + 1} is required!`);
+                    isValid = false;
+                }
+            });
+
+            // Prevent form submission if validation fails
+            if (!isValid) {
+                e.preventDefault();
+            }
+        });
+    </script>
+}
