@@ -22,7 +22,9 @@ namespace ReceptHemsida.Models
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public RecipeCategory Category { get; set; }
+
         public int CookTime { get; set; }
+
         public string Difficulty { get; set; }
         // Relation till instruktionerna
         public virtual ICollection<RecipeInstruction> Instructions { get; set; } = new List<RecipeInstruction>();

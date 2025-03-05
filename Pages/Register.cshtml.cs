@@ -22,10 +22,13 @@ namespace ReceptHemsida.Pages
 
         public class RegisterInputModel
         {
+            public string Firstname { get; set; }
+            public string Lastname { get; set; }
             public string Username { get; set; }
             public string Email { get; set; }
             public string Password { get; set; }
             public string ConfirmPassword { get; set; }
+            
         }
 
         public void OnGet()
@@ -46,7 +49,9 @@ namespace ReceptHemsida.Pages
             }
 
             var user = new ApplicationUser
-            { 
+            {
+                FirstName = Input.Firstname,
+                LastName = Input.Lastname,
                 UserName = Input.Username,
                 Email = Input.Email
             };
