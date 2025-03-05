@@ -47,56 +47,229 @@ const togglePasswordVisibility = (inputElement,
         togglePasswordVisibility(passwordConfirm, togglePasswordConfirm.querySelector("i"));
     });
 }
+/*Addrecipe*/
 
-/*Add Recipe*/
-let ingredientIndex = 1;
+document.getElementById('UploadedImage').addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            document.getElementById('imagePreview').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+});
 
-document.getElementById("addIngredient").addEventListener("click", function () {
-    const container = document.getElementById("ingredientsContainer");
+const tags = [];
+const tagsContainer = document.getElementById('tagsContainer');
+const tagsDataInput = document.getElementById('tagsData');
 
-    const ingredientDiv = document.createElement("div");
-    ingredientDiv.classList.add("ingredient");
-    ingredientDiv.setAttribute("data-index", ingredientIndex); // Unikt ID för radering
+function updateTagsInput() {
+    tagsDataInput.value = JSON.stringify(tags);
+}
 
-    // Namn
-    const nameLabel = document.createElement("label");
-    nameLabel.textContent = "Namn:";
-    const nameInput = document.createElement("input");
-    nameInput.setAttribute("type", "text");
-    nameInput.setAttribute("name", `Ingredients[${ingredientIndex}].Ingredient.Name`);
-    nameInput.required = true;
+function renderTags() {
+    tagsContainer.innerHTML = '';
 
-    // Mängd
-    const amountLabel = document.createElement("label");
-    amountLabel.textContent = "Mängd:";
-    const amountInput = document.createElement("input");
-    amountInput.setAttribute("type", "number");
-    amountInput.setAttribute("name", `Ingredients[${ingredientIndex}].Amount`);
-    amountInput.required = true;
+    tags.forEach((tag, index) => {
+        // Create tag element
+        const tagElement = document.createElement('div');
+        tagElement.className = 'tag-badge badge bg-secondary px-3 py-2';
 
-    // Enhet
-    const unitLabel = document.createElement("label");
-    unitLabel.textContent = "Enhet:";
-    const unitInput = document.createElement("input");
-    unitInput.setAttribute("type", "text");
-    unitInput.setAttribute("name", `Ingredients[${ingredientIndex}].Unit`);
-    unitInput.required = true;
+        // Add tag text
+        const tagText = document.createTextNode(tag + ' ');
+        tagElement.appendChild(tagText);
 
-    // Ta bort-knapp
-    const removeButton = document.createElement("button");
-    removeButton.textContent = "❌";
-    removeButton.setAttribute("type", "button");
-    removeButton.classList.add("remove-btn");
+        // Create remove button
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'tag-remove-btn btn-close btn-close-white ms-2';
+        removeBtn.setAttribute('aria-label', 'Remove tag');
+        removeBtn.setAttribute('data-index', index);
 
-    removeButton.addEventListener("click", function () {
-        ingredientDiv.remove();
+        // Add event listener to button
+        removeBtn.addEventListener('click', function () {
+            const index = parseInt(this.getAttribute('data-index'));
+            tags.splice(index, 1);
+            renderTags();
+            updateTagsInput();
+        });
+
+        tagElement.appendChild(removeBtn);
+        tagsContainer.appendChild(tagElement);
+    });
+}
+
+document.getElementById('addTag').addEventListener('click', function () {
+    const tagInput = document.getElementById('tagInput');
+    const tag = tagInput.value.trim();
+
+    if (tag && !tags.includes(tag)) {
+        tags.push(tag);
+        tagInput.value = '';
+        renderTags();
+        updateTagsInput();
+    }
+});
+document.getElementById('tagInput').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('addTag').click();
+    }
+});
+
+// Dynamic ingredient fields
+let ingredientCount = 1;
+document.getElementById('addIngredient').addEventListener('click', function () {
+    const container = document.getElementById('ingredientList');
+
+    // Create main container div
+    const ingredientRow = document.createElement('div');
+    ingredientRow.className = 'ingredient-row mb-2';
+
+    // Create row div
+    const rowDiv = document.createElement('div');
+    rowDiv.className = 'row ingredient-form-row';
+
+    // Amount column
+    const amountCol = document.createElement('div');
+    amountCol.className = 'col-md-3 amount-column';
+
+    const amountWrapper = document.createElement('div');
+    amountWrapper.className = 'form-floating amount-wrapper';
+
+    const amountInput = document.createElement('input');
+    amountInput.type = 'text';
+    amountInput.name = `Ingredients[${ingredientCount}].Quantity`;
+    amountInput.className = 'form-control amount-input';
+    amountInput.placeholder = 'Amount';
+
+    const amountLabel = document.createElement('label');
+    amountLabel.textContent = 'Amount';
+    amountLabel.className = 'amount-label';
+
+    amountWrapper.appendChild(amountInput);
+    amountWrapper.appendChild(amountLabel);
+    amountCol.appendChild(amountWrapper);
+
+    // Unit column
+    const unitCol = document.createElement('div');
+    unitCol.className = 'col-md-3 unit-column';
+
+    const unitWrapper = document.createElement('div');
+    unitWrapper.className = 'form-floating unit-wrapper';
+
+    const unitInput = document.createElement('input');
+    unitInput.type = 'text';
+    unitInput.name = `Ingredients[${ingredientCount}].Unit`;
+    unitInput.className = 'form-control unit-input';
+    unitInput.placeholder = 'Unit';
+
+    const unitLabel = document.createElement('label');
+    unitLabel.textContent = 'Unit';
+    unitLabel.className = 'unit-label';
+
+    unitWrapper.appendChild(unitInput);
+    unitWrapper.appendChild(unitLabel);
+    unitCol.appendChild(unitWrapper);
+
+    // Ingredient name column
+    const nameCol = document.createElement('div');
+    nameCol.className = 'col-md-5 name-column';
+
+    const nameWrapper = document.createElement('div');
+    nameWrapper.className = 'form-floating name-wrapper';
+
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.name = `Ingredients[${ingredientCount}].Name`;
+    nameInput.className = 'form-control name-input';
+    nameInput.placeholder = 'Ingredient';
+
+    const nameLabel = document.createElement('label');
+    nameLabel.textContent = 'Ingredient';
+    nameLabel.className = 'name-label';
+
+    nameWrapper.appendChild(nameInput);
+    nameWrapper.appendChild(nameLabel);
+    nameCol.appendChild(nameWrapper);
+
+    const btnCol = document.createElement('div');
+    btnCol.className = 'col-md-1 remove-column';
+
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'btn btn-outline-danger btn-sm remove-ingredient-btn';
+
+    const trashIcon = document.createElement('i');
+    trashIcon.className = 'bi bi-trash';
+
+    removeBtn.appendChild(trashIcon);
+    btnCol.appendChild(removeBtn);
+
+    // Add remove event listener
+    removeBtn.addEventListener('click', function () {
+        ingredientRow.remove();
     });
 
-   
+    // Assemble all elements
+    rowDiv.appendChild(amountCol);
+    rowDiv.appendChild(unitCol);
+    rowDiv.appendChild(nameCol);
+    rowDiv.appendChild(btnCol);
+    ingredientRow.appendChild(rowDiv);
+    container.appendChild(ingredientRow);
 
-    // Lägg till div i container
-    container.appendChild(ingredientDiv);
+    ingredientCount++;
+});
 
-    ingredientIndex++;
+// Dynamic instruction fields
+let instructionCount = 1;
+document.getElementById('addInstruction').addEventListener('click', function () {
+    const container = document.getElementById('instructionList');
+    instructionCount++;
 
-})
+    // Create main container
+    const instructionRow = document.createElement('div');
+    instructionRow.className = 'instruction-row d-flex mb-2';
+
+    // Create floating form group
+    const instructionWrapper = document.createElement('div');
+    instructionWrapper.className = 'form-floating instruction-wrapper flex-grow-1';
+
+    // Create textarea
+    const instructionInput = document.createElement('textarea');
+    instructionInput.name = `Instructions[${instructionCount - 1}].Step`;
+    instructionInput.className = 'form-control instruction-input';
+    instructionInput.style.height = '80px';
+    instructionInput.placeholder = 'Step description';
+
+    // Create label
+    const stepLabel = document.createElement('label');
+    stepLabel.textContent = `Step #${instructionCount}`;
+    stepLabel.className = 'step-label';
+
+    // Create remove button
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'btn btn-outline-danger btn-sm ms-2 remove-instruction-btn';
+
+    const trashIcon = document.createElement('i');
+    trashIcon.className = 'bi bi-trash';
+
+    removeBtn.appendChild(trashIcon);
+
+    // Add remove event listener
+    removeBtn.addEventListener('click', function () {
+        instructionRow.remove();
+    });
+
+    // Assemble all elements
+    instructionWrapper.appendChild(instructionInput);
+    instructionWrapper.appendChild(stepLabel);
+    instructionRow.appendChild(instructionWrapper);
+    instructionRow.appendChild(removeBtn);
+    container.appendChild(instructionRow);
+});
+
+//AllRecipe

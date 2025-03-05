@@ -214,9 +214,7 @@ header {
     transition: background 0.3s;
 }
 
-   /* .btn, .btn-login,.btn-register:hover {
-        background: rgb(116, 161, 116);
-    }*/
+   
 
 .categories {
     display: flex;
@@ -240,7 +238,7 @@ header {
         color: white;
     }
 
-.section-title {
+.section-title  {
     text-align: center;
     margin-bottom: 30px;
     font-size: 32px;
@@ -285,7 +283,7 @@ header {
     padding: 20px;
 }
 
-.recipe-title {
+.recipe-title  {
     font-size: 20px;
     margin-bottom: 10px;
 }
@@ -624,4 +622,190 @@ iframe {
     width: 500px;
     height: 500px;
     border-radius: 10px;
+}
+
+/*Addrecipe*/
+
+.form-floating{
+    position:relative;
+    margin-bottom:1rem;
+}
+    .form-floating > .form-control,
+    .form-floating > .form-select {
+        height: calc(3.5rem + 2px);
+        padding: 1rem 0.75rem;
+    }
+
+    .form-floating > label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        padding: 0.3rem 0.75rem;
+        pointer-events: none;
+        border: 1px solid transparent;
+        transform-origin: 0 0;
+        transition: opacity .1s ease-in-out, transform .1s ease-in-out;
+    }
+    .form-floating > .form-control:focus ~ label,
+    .form-floating > .form-control:not(:placeholder-shown) ~ label,
+    .form-floating > .form-select ~ label {
+        opacity: .65;
+        transform: scale(.85) translateY(-0.5rem) translateX(0.15rem);
+    }
+.ingredient-row {
+    transition: all 0.3s ease;
+    border-radius: 0.25rem;
+    padding: 0.5rem 0;
+}
+
+    .ingredient-row:hover {
+        background-color: rgba(0, 0, 0, 0.02);
+    }
+.amount-input, .unit-input, .name-input {
+    border-radius: 0.25rem;
+}
+
+.remove-column {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.remove-ingredient-btn, .remove-instruction-btn {
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+    .remove-ingredient-btn:hover, .remove-instruction-btn:hover {
+        background-color: white;
+        color: white;
+    }
+.instruction-row {
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.instruction-wrapper {
+    flex-grow: 1;
+}
+
+.instruction-input {
+    min-height: 6rem;
+    border-radius: 0.25rem;
+}
+
+.step-label {
+    font-weight: 500;
+}
+.tag-badge {
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+    .tag-badge:hover {
+        background-color: #5a6268;
+    }
+
+.tag-remove-btn {
+    width: 0.75rem;
+    height: 0.75rem;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+    .tag-remove-btn:hover {
+        opacity: 1;
+    }
+
+#tagsContainer {
+    min-height: 2.5rem;
+    padding: 0.5rem 0;
+}
+.image-preview-container {
+    width: 100%;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    overflow: hidden;
+}
+
+#imagePreview {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* Button styling */
+.btn-outline-primary {
+    color:var(--primary);
+    border-color: var(--primary);
+}
+
+    .btn-outline-primary:hover {
+        color: white;
+        background-color: #5a6268;
+    }
+
+.btn-outline-danger {
+    color: #dc3545;
+    border-color: #dc3545;
+}
+
+    .btn-outline-danger:hover {
+        /*color: #fff;*/
+        background-color: lightgray;
+    }
+   
+/* Form animations */
+.form-control:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    border-color: #86b7fe;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.ingredient-row, .instruction-row {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .remove-column {
+        margin-top: 0.5rem;
+    }
+
+    .ingredient-form-row {
+        flex-direction: column;
+    }
+
+    .amount-column, .unit-column, .name-column {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
 }

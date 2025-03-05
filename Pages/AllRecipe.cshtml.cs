@@ -13,11 +13,11 @@ namespace ReceptHemsida.Pages
         {
             _recipeService = recipeService;
         }
-        public List<Recipe> AllRecipes { get; set; } = new();
+        public List<Recipe> Recipes { get; set; } = new();
        
         public async Task OnGetAsync()
         {
-            AllRecipes = await _recipeService.GetAllRecipesAsync();
+            Recipes = await _recipeService.GetAllRecipesAsync();
         }
     }
 }
