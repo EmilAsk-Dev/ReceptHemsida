@@ -16,8 +16,6 @@ namespace ReceptHemsida.Models
         public virtual ApplicationUser FollowerUser { get; set; }
 
         [ForeignKey("FollowingId")]
-        public virtual ApplicationUser FollowingUser { get; set; }
-
-        
+        public virtual ApplicationUser FollowingUser { get; set; }        
     }
 }

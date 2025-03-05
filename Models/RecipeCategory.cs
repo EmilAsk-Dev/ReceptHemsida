@@ -2,10 +2,10 @@
 {
     public enum RecipeCategory
     {
-        Breakfast,
-        Lunch,
-        Dinner,
-        Snack,
-        Quick
+        Breakfast = 0,
+        Lunch = 1,
+        Dinner = 2,
+        Snack = 3,
+        Quick = 4
     }
 }
