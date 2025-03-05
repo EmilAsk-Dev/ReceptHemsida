@@ -78,6 +78,7 @@ namespace ReceptHemsida.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error adding recipe: {RecipeTitle}", recipe.Title);
+                
             }
         }
 

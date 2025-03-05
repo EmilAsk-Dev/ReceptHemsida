@@ -5,26 +5,60 @@
 
 	Layout = "~/Pages/Shared/_Layout.cshtml";
 }
-<h2 class="section-title">All Recipes</h2>
 
-<section class="container">
+<div class="page-header">
+    <h1>Our Recipes</h1>
+    <p>Discover our delicious recipes for all occasions</p>
+</div>
+
+<div class="filters-container">
+    <div class="filter-group">
+        <label for="categoryFilter">Search Category...:</label>
+        <select id="categoryFilter" class="filter-select">
+            <option value="all">All Categorys</option>
+            @foreach (var category in Enum.GetValues(typeof (ReceptHemsida.Models.RecipeCategory)))
+            {
+                <option value="@category">@category</option>
+            }
+        </select>
+    </div>
+
+        <div class="filter-group">
+            <label for="timeFilter">Cooking Time:</label>
+            <select id="timeFilter" class="filter-select">
+                <option value="all">Choose between</option>
+                <option value="15">Under 15 min</option>
+                <option value="30">Under 30 min</option>
+                <option value="60">Under 60 min</option>
+                <option value="120">Under 2 timmar</option>
+            </select>
+        </div>
+    </div>
+
     <div class="recipes-container">
-        @foreach (var recipe in Model.AllRecipes) // Loopar igenom alla recept
-        {
-            <div class="recipe-card">
-                <img src="@recipe.ImageUrl" alt="@recipe.Title" class="recipe-img">
-                <div class="recipe-content">
-                    <h3 class="recipe-title">@recipe.Title</h3>
-                    <div class="recipe-meta">
-                        <span>@recipe.CookTime min</span>
-                        <span>@recipe.Difficulty</span>
-                    </div>
-                </div>
-                <p class="recipe-desc">@recipe.Description</p>
-                <div class="recipe-footer">
-                    <a href="/recipe/details/@recipe.Id" class="btn">View Recipe</a>
+        @foreach (var recipe in Model.Recipes)
+    {
+        <div class="recipe-card"
+             data-category="@recipe.Category"
+             data-cooktime="@recipe.CookTime">
+            <img src="@(string.IsNullOrEmpty(recipe.ImageUrl) ? "/images/default-recipe.jpg" : recipe.ImageUrl)"
+                 alt="@recipe.Title" class="recipe-img">
+            <div class="recipe-content">
+                <h3 class="recipe-title">@recipe.Title</h3>
+                <div class="recipe-meta">
+                    <span><i class="bi bi-clock"></i> @recipe.CookTime min</span>
+                    <span><i class="bi bi-award"></i> @recipe.Difficulty</span>
+                    <span><i class="bi bi-tag"></i> @recipe.Category</span>
                 </div>
             </div>
-        }
-    </div>
-</section>
+            <p class="recipe-desc">@recipe.Description</p>
+            <div class="recipe-footer">
+                <a href="/recipe/details/@recipe.Id" class="btn">View Recipe</a>
+            </div>
+        </div>
+    }
+</div>
+
+<div id="noRecipesMessage" class="no-recipes" style="display: none;">
+    <p>No recipes was found with the chosen Category.</p>
+</div>
