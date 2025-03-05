@@ -14,10 +14,12 @@
         <h1 class="fw-bold search-title">Search recipe</h1>
 
         <!-- Search Input Centered -->
-        <div class="search-container">
-            <input type="text" class="form-control search-input" placeholder="Search recipe of your choice...">
-            <button class="btn search-btn"><i class="fas fa-search"></i></button>
-        </div>
+        <form method="get">
+            <div class="search-container">
+                <input type="text" name="Search" value="@Model.Search" class="form-control search-input" placeholder="Search recipe of your choice...">
+                <button type="submit" class="btn search-btn"><i class="fas fa-search"></i></button>
+            </div>
+        </form>
     </div>
 
     <!-- Filter Section Below Search -->
@@ -58,5 +60,43 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+<!-- Recipes Display Section -->
+<div class="container">
+    <div class="row">
+        @if (Model.Recipes.Any())
+        {
+            @foreach (var recipe in Model.Recipes)
+            {
+                <div class="col-md-4">
+                    <div class="recipe-card"
+                         data-category="@recipe.Category"
+                         data-cooktime="@recipe.CookTime"
+                         data-difficulty="@recipe.Difficulty">
+                        <img src="@(string.IsNullOrEmpty(recipe.ImageUrl) ? "/images/default-recipe.jpg" : recipe.ImageUrl)"
+                             alt="@recipe.Title" class="recipe-img">
+                        <div class="recipe-content">
+                            <h3 class="recipe-title">@recipe.Title</h3>
+                            <div class="recipe-meta">
+                                <span><i class="bi bi-clock"></i> @recipe.CookTime min</span>
+                                <span><i class="bi bi-award"></i> @recipe.Difficulty</span>
+                                <span><i class="bi bi-tag"></i> @recipe.Category</span>
+                            </div>
+                        </div>
+                        <p class="recipe-desc">@recipe.Description</p>
+                        <div class="recipe-footer">
+                            <a href="/recipe/details/@recipe.Id" class="btn">View Recipe</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div id="noRecipesMessage" class="no-recipes text-center">
+                <p>No recipes found with the chosen filters.</p>
+            </div>
+        }
     </div>
 </div>
