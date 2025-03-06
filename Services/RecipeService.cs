@@ -124,6 +124,25 @@ namespace ReceptHemsida.Services
             {
                 _logger.LogError(ex, "Error deleting recipe with ID: {RecipeId}", id);
             }
+
+        }
+        public async Task<List<Recipe>> SearchRecipesAsync(string searchTerm)
+        {
+            try
+            {
+                return await _context.Recipes
+                    .Where(r => r.Title.Contains(searchTerm) || r.Description.Contains(searchTerm))
+                    .Include(r => r.User)
+                    .Include(r => r.RecipeIngredients)
+                    .Include(r => r.Comments)
+                    .Include(r => r.Favorites)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while searching for recipes.");
+                return new List<Recipe>(); // Returnerar en tom lista vid fel
+            }
         }
 
     }

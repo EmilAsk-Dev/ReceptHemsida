@@ -26,7 +26,8 @@ namespace ReceptHemsida.Pages
         public List<RecipeIngredient> RecipeIngredients { get; set; } = new List<RecipeIngredient>();
 
         public List<SelectListItem> Categories { get; set; } = new List<SelectListItem>();
-
+        [BindProperty]
+        public List<RecipeInstruction> Instructions { get; set; } = new List<RecipeInstruction>();
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -44,16 +45,14 @@ namespace ReceptHemsida.Pages
 
         public void OnGet()
         {
-            Categories = new List<SelectListItem>();
-
-            foreach (var category in Enum.GetValues(typeof(RecipeCategory)))
-            {
-                Categories.Add(new SelectListItem
+            Categories = Enum.GetValues(typeof(RecipeCategory))
+                .Cast<RecipeCategory>()
+                .Select(c => new SelectListItem
                 {
-                    Value = category.ToString(),
-                    Text = category.ToString()
-                });
-            }
+                    Value = c.ToString(),
+                    Text = c.ToString()
+                }).ToList();
         }
+
     }
 }
