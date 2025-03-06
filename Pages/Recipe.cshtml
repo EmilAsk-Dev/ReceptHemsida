@@ -86,30 +86,34 @@ else
             </form>
         </div>
     </div>
-    
-    <div class="recipes-container">
-        @foreach (var recipe in Model.Recipes)
-        {
-            <div class="recipe-card"
-                 data-category="@recipe.Category"
-                 data-cooktime="@recipe.CookTime">
-                <img src="@(string.IsNullOrEmpty(recipe.ImageUrl) ? "/images/default-recipe.jpg" : recipe.ImageUrl)"
-                     alt="@recipe.Title" class="recipe-img">
-                <div class="recipe-content">
-                    <h3 class="recipe-title">@recipe.Title</h3>
-                    <div class="recipe-meta">
-                        <span><i class="bi bi-clock"></i> @recipe.CookTime min</span>
-                        <span><i class="bi bi-award"></i> @recipe.Difficulty</span>
-                        <span><i class="bi bi-tag"></i> @recipe.Category</span>
+    <section class="recipes-container">
+        <h2 class="section-title">Popular Recipes</h2>
+        <div class="recipes">
+            @foreach (var recipe in Model.Recipes)
+            {
+                <div class="recipe-card" data-category="@recipe.Category" data-cooktime="@recipe.CookTime">
+                    <img src="@(string.IsNullOrEmpty(recipe.ImageUrl) ? "/images/default-recipe.jpg" : recipe.ImageUrl)" alt="@recipe.Title" class="recipe-img">
+                    <div class="recipe-content">
+                        <h3 class="recipe-title">@recipe.Title</h3>
+                        <div class="recipe-meta">
+                            <span>@recipe.CookTime min</span>
+                            <span>@recipe.Difficulty</span>
+                        </div>
+                        <p class="recipe-desc">@recipe.Description</p>
+                        <div class="recipe-footer">
+                            <div class="recipe-tags">
+                                @foreach (var tag in recipe.Tags)
+                                {
+                                    <span class="recipe-tag">@tag</span>
+                                }
+                            </div>
+                            <a href="/recipe/@recipe.Id" class="btn">View Recipe</a>
+                        </div>
                     </div>
                 </div>
-                <p class="recipe-desc">@recipe.Description</p>
-                <div class="recipe-footer">
-                    <a href="/recipe/@recipe.Id" class="btn">View Recipe</a>
-                </div>
-            </div>
-        }
-    </div>
+            }
+        </div>
+    </section>
     
     @if (!Model.Recipes.Any())
     {
