@@ -1,28 +1,73 @@
-﻿@page
+﻿@page "recipe/{id?}"
 @model ReceptHemsida.Pages.RecipeModel
 @{
-	ViewData["Title"] = "All Recipes";
-
-	Layout = "~/Pages/Shared/_Layout.cshtml";
+    ViewData["Title"] = "All Recipes";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
-<div class="page-header">
-    <h1>Our Recipes</h1>
-    <p>Discover our delicious recipes for all occasions</p>
-</div>
-
-<div class="filters-container">
-    <div class="filter-group">
-        <label for="categoryFilter">Search Category...:</label>
-        <select id="categoryFilter" class="filter-select">
-            <option value="all">All Categorys</option>
-            @foreach (var category in Enum.GetValues(typeof (ReceptHemsida.Models.RecipeCategory)))
+@if (Model.SingleRecipe != null)
+{
+    
+    <div class="recipe-details">
+        <h2>@Model.SingleRecipe.Title</h2>
+        <img src="@Model.SingleRecipe.ImageUrl" alt="@Model.SingleRecipe.Title" class="recipe-img"/>
+        <div class="recipe-meta">
+            <span><i class="bi bi-clock"></i> @Model.SingleRecipe.CookTime min</span>
+            <span><i class="bi bi-award"></i> @Model.SingleRecipe.Difficulty</span>
+            <span><i class="bi bi-tag"></i> @Model.SingleRecipe.Category</span>
+        </div>
+        <p>@Model.SingleRecipe.Description</p>
+        
+        <h3>Instructions:</h3>
+        <ol class="recipe-instructions">
+            @foreach (var step in Model.SingleRecipe.Instructions.Select((text, index) => new { text, index }).ToList())
             {
-                <option value="@category">@category</option>
+                <li>
+                    <span class="step-number">@(@step.index + 1).</span>
+                    <p>@step.text</p>
+                </li>
             }
-        </select>
+        </ol>
+        
+        <a href="/recipe" class="btn">Back to All Recipes</a>
     </div>
-
+}
+else
+{
+    
+    <div class="page-header">
+        <h1>Our Recipes</h1>
+        <p>Discover our delicious recipes for all occasions</p>
+        
+        @if (!string.IsNullOrEmpty(Model.Search))
+        {
+            <div class="search-results-info">
+                <p>Search results for: <strong>@Model.Search</strong></p>
+                <a href="/recipe" class="btn btn-sm">Clear Search</a>
+            </div>
+        }
+        
+        @if (!string.IsNullOrEmpty(Model.Category))
+        {
+            <div class="category-filter-info">
+                <p>Filtered by category: <strong>@Model.Category</strong></p>
+                <a href="/recipe" class="btn btn-sm">Clear Filter</a>
+            </div>
+        }
+    </div>
+    
+    <div class="filters-container">
+        <div class="filter-group">
+            <label for="categoryFilter">Search Category:</label>
+            <select id="categoryFilter" class="filter-select">
+                <option value="all">All Categories</option>
+                @foreach (var category in Enum.GetValues(typeof(ReceptHemsida.Models.RecipeCategory)))
+                {
+                    <option value="@((int)category)" selected="@(Model.Category == category.ToString())">@category</option>
+                }
+            </select>
+        </div>
+        
         <div class="filter-group">
             <label for="timeFilter">Cooking Time:</label>
             <select id="timeFilter" class="filter-select">
@@ -33,32 +78,80 @@
                 <option value="120">Under 2 timmar</option>
             </select>
         </div>
+        
+        <div class="filter-group">
+            <form method="get" action="/recipe/search">
+                <input type="text" name="Search" placeholder="Search recipes..." value="@Model.Search" />
+                <button type="submit" class="btn btn-sm">Search</button>
+            </form>
+        </div>
     </div>
-
+    
     <div class="recipes-container">
         @foreach (var recipe in Model.Recipes)
-    {
-        <div class="recipe-card"
-             data-category="@recipe.Category"
-             data-cooktime="@recipe.CookTime">
-            <img src="@(string.IsNullOrEmpty(recipe.ImageUrl) ? "/images/default-recipe.jpg" : recipe.ImageUrl)"
-                 alt="@recipe.Title" class="recipe-img">
-            <div class="recipe-content">
-                <h3 class="recipe-title">@recipe.Title</h3>
-                <div class="recipe-meta">
-                    <span><i class="bi bi-clock"></i> @recipe.CookTime min</span>
-                    <span><i class="bi bi-award"></i> @recipe.Difficulty</span>
-                    <span><i class="bi bi-tag"></i> @recipe.Category</span>
+        {
+            <div class="recipe-card"
+                 data-category="@recipe.Category"
+                 data-cooktime="@recipe.CookTime">
+                <img src="@(string.IsNullOrEmpty(recipe.ImageUrl) ? "/images/default-recipe.jpg" : recipe.ImageUrl)"
+                     alt="@recipe.Title" class="recipe-img">
+                <div class="recipe-content">
+                    <h3 class="recipe-title">@recipe.Title</h3>
+                    <div class="recipe-meta">
+                        <span><i class="bi bi-clock"></i> @recipe.CookTime min</span>
+                        <span><i class="bi bi-award"></i> @recipe.Difficulty</span>
+                        <span><i class="bi bi-tag"></i> @recipe.Category</span>
+                    </div>
+                </div>
+                <p class="recipe-desc">@recipe.Description</p>
+                <div class="recipe-footer">
+                    <a href="/recipe/@recipe.Id" class="btn">View Recipe</a>
                 </div>
             </div>
-            <p class="recipe-desc">@recipe.Description</p>
-            <div class="recipe-footer">
-                <a href="/recipe/details/@recipe.Id" class="btn">View Recipe</a>
-            </div>
+        }
+    </div>
+    
+    @if (!Model.Recipes.Any())
+    {
+        <div id="noRecipesMessage" class="no-recipes">
+            <p>No recipes were found with the current filters.</p>
         </div>
     }
-</div>
+}
 
-<div id="noRecipesMessage" class="no-recipes" style="display: none;">
-    <p>No recipes was found with the chosen Category.</p>
-</div>
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const categoryFilter = document.getElementById("categoryFilter");
+            categoryFilter.addEventListener("change", function() {
+                const category = this.value;
+                if (category === "all") {
+                    window.location.href = "/recipe";
+                } else {
+                    window.location.href = "/recipe/category/" + category;
+                }
+            });
+
+            const timeFilter = document.getElementById("timeFilter");
+            timeFilter.addEventListener("change", function() {
+                const cookTime = this.value;
+                const recipeCards = document.querySelectorAll(".recipe-card");
+                let visibleCount = 0;
+                
+                recipeCards.forEach(card => {
+                    const cardCookTime = parseInt(card.getAttribute("data-cooktime"));
+                    
+                    if (cookTime === "all" || cardCookTime <= parseInt(cookTime)) {
+                        card.style.display = "block";
+                        visibleCount++;
+                    } else {
+                        card.style.display = "none";
+                    }
+                });
+                
+                document.getElementById("noRecipesMessage").style.display = 
+                    visibleCount === 0 ? "block" : "none";
+            });
+        });
+    </script>
+}
