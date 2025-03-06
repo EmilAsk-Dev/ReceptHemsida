@@ -42,7 +42,8 @@ namespace ReceptHemsida.Services
                     .Include(r => r.User) // Optionally include user information (creator of the recipe)
                     .Include(r => r.RecipeIngredients) // Optionally include ingredients
                     .Include(r => r.Comments) // Optionally include comments
-                    .Include(r => r.Favorites) // Optionally include favorites
+                    .Include(r => r.Favorites)
+                    .Include(r => r.Instructions)// Optionally include favorites
                     .ToListAsync(); // Return the list of recipes
             }
             catch (Exception ex)
@@ -58,12 +59,19 @@ namespace ReceptHemsida.Services
             try
             {
                 return await _context.Recipes
-                    .FirstOrDefaultAsync(r => r.Id == id); // Fetches a single recipe by its ID
+                    .Include(r => r.Instructions)
+                    .Include(r => r.RecipeIngredients)
+                        .ThenInclude(ri => ri.Ingredient)
+                    .Include(r => r.Comments)
+                        .ThenInclude(c => c.User)
+                    .Include(r => r.Favorites)
+                    .Include(r => r.User)
+                    .FirstOrDefaultAsync(r => r.Id == id);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error fetching recipe by ID: {RecipeId}", id);
-                return null; // Return null if no recipe is found
+                return null;
             }
         }
 

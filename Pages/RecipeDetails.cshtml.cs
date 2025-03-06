@@ -18,13 +18,12 @@ namespace ReceptHemsida.Pages
         
         public async Task<IActionResult> OnGetAsync(string id)
         {
-            
+
             Recipe = await _recipeService.GetRecipeByIdAsync(id);
-            
-            
+
             if (Recipe == null)
             {
-                return Page();
+                return BadRequest();
             }
             
             return Page();
