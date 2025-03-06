@@ -51,7 +51,7 @@ namespace ReceptHemsida.Services
                 return new List<Recipe>(); // Return an empty list if there is an error
             }
         }
-        
+
 
         public async Task<Recipe> GetRecipeByIdAsync(string id)
         {
@@ -78,7 +78,7 @@ namespace ReceptHemsida.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error adding recipe: {RecipeTitle}", recipe.Title);
-                
+
             }
         }
 
@@ -124,8 +124,9 @@ namespace ReceptHemsida.Services
             {
                 _logger.LogError(ex, "Error deleting recipe with ID: {RecipeId}", recipeId);
             }
-
         }
+
+
         public async Task<List<Recipe>> SearchRecipesAsync(string searchTerm)
         {
             try
