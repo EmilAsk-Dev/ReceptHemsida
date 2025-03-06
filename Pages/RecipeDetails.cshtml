@@ -1,28 +1,53 @@
-﻿@page 
+﻿@page "{id}"
 @model ReceptHemsida.Pages.RecipeDetailsModel
 @{
-	ViewData["Title"] = "Recipe Details";
-	Layout = "~/Pages/Shared/_Layout.cshtml";
+    ViewData["Title"] = Model.Recipe?.Title ?? "Recipe Details";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
 }
-<h2>@Model.Recipe.Title</h2>
-<div class="recipe-details">
-	<img src="@Model.Recipe.ImageUrl" alt="@Model.Recipe.Title" class="recipe-img"/>
-	<div class="recipe-meta">
-		<span>@Model.Recipe.CookTime min</span>
-		<span>@Model.Recipe.Difficulty</span>
-	</div>
-	<p>@Model.Recipe.Description</p>
 
-	<h3>Instructions:</h3>
-	<ol class="recipe-instructions">
-		@foreach (var step in Model.Recipe.Instructions.Select((text, index) => new { text, index }).ToList())
-		{
-			<li>
-				<span class="step-number">@(@step.index + 1).</span>
-				<p>@step.text</p>
-			</li>
-		}
-	</ol>
+@if (Model.Recipe != null)
+{
+    <div class="recipe-details">
+        <h2>@Model.Recipe.Title</h2>
+        <img src="@(string.IsNullOrEmpty(Model.Recipe.ImageUrl) ? "/images/default-recipe.jpg" : Model.Recipe.ImageUrl)"
+             alt="@Model.Recipe.Title" class="recipe-img" />
+        <div class="recipe-meta">
+            <span><i class="bi bi-clock"></i> @Model.Recipe.CookTime min</span>
+            <span><i class="bi bi-award"></i> @Model.Recipe.Difficulty</span>
+            <span><i class="bi bi-tag"></i> @Model.Recipe.Category</span>
+        </div>
+        <p>@Model.Recipe.Description</p>
 
-</div>
+        @if (Model.Recipe.RecipeIngredients != null && Model.Recipe.RecipeIngredients.Any())
+        {
+            <h3>Ingredients:</h3>
+            <ul class="recipe-ingredients">
+                @foreach (var ingredient in Model.Recipe.RecipeIngredients)
+                {
+                    <li>@ingredient</li>
+                }
+            </ul>
+        }
 
+        <h3>Instructions:</h3>
+        <ol class="recipe-instructions">
+            @foreach (var step in Model.Recipe.Instructions.Select((text, index) => new { text, index }).ToList())
+            {
+                <li>
+                    <span class="step-number">@(@step.index + 1).</span>
+                    <p>@step.text</p>
+                </li>
+            }
+        </ol>
+
+        <a href="/recipe" class="btn">Back to All Recipes</a>
+    </div>
+}
+else
+{
+    <div class="error-message">
+        <h2>Recipe Not Found</h2>
+        <p>Sorry, we couldn't find the recipe you were looking for.</p>
+        <a href="/recipe" class="btn">View All Recipes</a>
+    </div>
+}
