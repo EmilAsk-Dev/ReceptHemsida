@@ -21,7 +21,15 @@ namespace ReceptHemsida.Pages
        
         public async Task OnGetAsync()
         {
-            Recipes = await _recipeService.GetAllRecipesAsync();
+            if (!string.IsNullOrEmpty(Search))
+            {
+                Recipes = await _recipeService.SearchRecipesAsync(Search);
+            }
+            else
+            {
+                Recipes = await _recipeService.GetAllRecipesAsync();
+            }
+
         }
     }
 }
