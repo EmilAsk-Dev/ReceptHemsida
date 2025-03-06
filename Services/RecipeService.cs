@@ -95,12 +95,12 @@ namespace ReceptHemsida.Services
             }
         }
 
-        public async Task DeleteRecipeAsync(string id, string currentUserId)
+        public async Task DeleteRecipeAsync(string recipeId, string currentUserId)
         {
             try
             {
                 // Fetch the recipe by its ID
-                var recipe = await GetRecipeByIdAsync(id);
+                var recipe = await GetRecipeByIdAsync(recipeId);
 
                 // Check if the recipe exists and is created by the current user
                 if (recipe != null && recipe.UserId == currentUserId)
@@ -112,7 +112,7 @@ namespace ReceptHemsida.Services
                 {
                     if (recipe == null)
                     {
-                        _logger.LogWarning("Recipe with ID: {RecipeId} not found", id);
+                        _logger.LogWarning("Recipe with ID: {RecipeId} not found", recipeId);
                     }
                     else
                     {
@@ -122,7 +122,7 @@ namespace ReceptHemsida.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error deleting recipe with ID: {RecipeId}", id);
+                _logger.LogError(ex, "Error deleting recipe with ID: {RecipeId}", recipeId);
             }
         }
 
