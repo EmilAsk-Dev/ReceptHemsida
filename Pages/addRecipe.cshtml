@@ -1,141 +1,248 @@
 ﻿@page
 @model ReceptHemsida.Pages.AddRecipeModel
 @{
-    ViewData["Title"] = "addRecipe";
-
+    ViewData["Title"] = "Create New Recipe";
 }
+<div class="create-recipe-header">
+    <h1 class="fw-bold mb-4">Create New Recipe</h1>
+    <p class="subheading">Share your favorite recipes with the world</p>
+</div>
+
+
 <div class="container my-5">
-    <div class="recipe-header">
+    <form method="post">
+        <div class="row">
+            <!--  Ingredients & Instructions  -->
+            <div class="col-md-6">
+                <!-- Ingredients Section -->
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="mb-0">Ingredients</h5>
+                        <button type="button" class="btn-instruct btn-primary" id="addIngredient">+ Add Ingredient</button>
+                    </div>
 
-        <form style="text-align:center;" method="post" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div id="ingredientsList">
+                        <div class="row mb-2">
+                            <div class="col-md-4"><strong>Amount</strong></div>
+                            <div class="col-md-4"><strong>Unit</strong></div>
+                            <div class="col-md-4"><strong>Ingredient</strong></div>
+                        </div>
 
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-md-8">
-                        <h1 class="mb-4 text-center text-nowrap" style="font-weight:bold">Add New Recipe</h1>
+                        @for (int i = 0; i < Model.RecipeIngredients.Count; i++)
+                        {
+                            <div class="row mb-3 ingredient-row align-items-center">
+                                <div class="col-md-4">
+                                    <input type="number" class="form-control" asp-for="RecipeIngredients[i].Quantity" />
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-select" asp-for="RecipeIngredients[i].Unit">
+                                        <option>st</option>
+                                        <option>g</option>
+                                        <option>ml</option>
+                                        <option>cup</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <input class="form-control" list="ingredientOptions"
+                                           asp-for="RecipeIngredients[i].IngredientName" placeholder="Ingredient name" />
+                                    <datalist id="ingredientOptions">
+                                        @foreach (var ingredient in Model.AvailableIngredients)
+                                        {
+                                            <option value="@ingredient.Name"></option>
+                                        }
+                                    </datalist>
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn-instruct btn-outline-danger btn-sm remove-item">&times;</button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Instructions Section  -->
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="mb-0">Instructions</h5>
+
+                        <button type="button" class="btn-instruct btn-primary" id="addInstruction">+ Add Step</button>
+                    </div>
+
+                    <div id="instructionsList">
+                        @for (int i = 0; i < Model.Instructions.Count; i++)
+                        {
+                            <div class="row mb-3 instruction-row">
+                                <div class="col-1 text-center">
+                                    <div class="bg-light px-2 py-1 rounded">
+                                        <span>@(i + 1)</span>
+                                        <input type="hidden" asp-for="Instructions[i].StepNumber" value="@(i + 1)" />
+                                    </div>
+                                </div>
+                                <div class="col-10">
+                                    <textarea class="form-control"
+                                              asp-for="Instructions[i].InstructionText" rows="2"
+                                              placeholder="Enter instruction here..."></textarea>
+                                </div>
+                                <div class="col-1 d-flex align-items-center justify-content-center">
+                                    <button type="button" class="btn-instruct btn-outline-danger remove-instruction">
+                                        <i class="bi bi-x"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
 
-            <div class="row">
+            <!--  Recipe Details -->
+            <div class="col-md-6">
+                <!-- Recipe Title -->
+                <div class="mb-3">
+                    <label asp-for="Recipe.Title" class="form-label">Recipe Title</label>
+                    <input asp-for="Recipe.Title" class="form-control" required />
+                    <span asp-validation-for="Recipe.Title" class="text-danger"></span>
+                </div>
 
-                <div class="col-md-8">
-                    <div class="form-floating mb-3">
-                        <input asp-for="Recipe.Title" class="form-control" placeholder="Recipe Title" />
-                        <label asp-for="Recipe.Title">Recipe Title</label>
-                        <span asp-validation-for="Recipe.Title" class="text-danger"></span>
+                <!-- Recipe Photo -->
+                <div class="mb-3">
+                    <div class="text-center p-4 border rounded bg-light">
+                        <label for="upload-photo" class="d-block">
+                            <i class="bi-bi-camera text-muted"></i>
+                            <p class="text-muted">Add recipe photo</p>
+                        </label>
+                        <input type="file" id="upload-photo" class="d-none">
                     </div>
+                </div>
 
-                    <div class="form-floating mb-3">
-                        <textarea asp-for="Recipe.Description" class="form-control" style="height: 100px" placeholder="Description"></textarea>
-                        <label asp-for="Recipe.Description">Description</label>
-                        <span asp-validation-for="Recipe.Description" class="text-danger"></span>
-                    </div>
+                <!-- Description -->
+                <div class="mb-3">
+                    <label asp-for="Recipe.Description" class="form-label">Description</label>
+                    <textarea asp-for="Recipe.Description" class="form-control" rows="4"
+                              placeholder="Describe your recipe..." required></textarea>
+                    <span asp-validation-for="Recipe.Description" class="text-danger"></span>
+                </div>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-floating mb-3">
-                                <input asp-for="Recipe.CookTime" class="form-control" placeholder="Cook Time (minutes)" />
-                                <label asp-for="Recipe.CookTime">Cook Time (minutes)</label>
-                                <span asp-validation-for="Recipe.CookTime" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating mb-3">
-                                <select asp-for="Recipe.Difficulty" class="form-select" aria-label="Difficulty">
-                                    <option value="">-- Select Difficulty --</option>
-                                    <option value="Easy">Easy</option>
-                                    <option value="Medium">Medium</option>
-                                    <option value="Hard">Hard</option>
-                                </select>
-                                <label asp-for="Recipe.Difficulty">Difficulty</label>
-                                <span asp-validation-for="Recipe.Difficulty" class="text-danger"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-floating mb-3">
-                        <select asp-for="Recipe.Category" asp-items="Model.Categories" class="form-select" aria-label="Category">
-                            <option value="">-- Select Category --</option>
-
-                        </select>
-                        <label asp-for="Recipe.Category">Category</label>
+                <div class="row mb-3">
+                    <!-- Category -->
+                    <div class="col-md-4">
+                        <label asp-for="Recipe.Category" class="form-label">Category</label>
+                        <select asp-for="Recipe.Category" asp-items="Model.Categories" class="form-select"></select>
                         <span asp-validation-for="Recipe.Category" class="text-danger"></span>
                     </div>
 
-                    <div class="add-tag">
-                        <label asp-for="Recipe.Tags" class="form-label">Tags</label>
-                        <div class="input-group">
-                            <input id="tagInput" type="text" class="form-control" placeholder="Add tag and press Enter" />
-                            <button id="addTag" type="button" class="btn btn-outline-secondary">Add</button>
-                        </div>
-                        <div id="tagsContainer" class="d-flex flex-wrap gap-2 mt-2"></div>
-                        <input type="hidden" id="tagsData" name="Recipe.Tags" />
+                    <!-- Cook Time -->
+                    <div class="col-md-4">
+                        <label asp-for="Recipe.CookTime" class="form-label">
+                            <i class="bi bi-clock me-2"></i>Cook Time
+                        </label>
+                        <input asp-for="Recipe.CookTime" type="number" min="0" class="form-control"
+                               placeholder="minutes" />
+                        <span asp-validation-for="Recipe.CookTime" class="text-danger"></span>
+                    </div>
+
+                    <!-- Difficulty -->
+                    <div class="col-md-4">
+                        <label asp-for="Recipe.Difficulty" class="form-label">Difficulty</label>
+                        <select asp-for="Recipe.Difficulty" asp-items="Model.DifficultyLevels" class="form-select"></select>
+                        <span asp-validation-for="Recipe.Difficulty" class="text-danger"></span>
                     </div>
                 </div>
 
-                <div class="col-md-4">
-                    <div class="col-md-4 order-md-2">
-                        <label for="UploadedImage" class="form-label text-center text-nowrap">Share your Recipe Image:</label>
-                        <input style="width:350px;" id="UploadedImage" name="UploadedImage" type="file" class="form-control" accept="image/*" />
-                    </div>
-                    <div style="width:350px;" class="image-preview-container mb-3">
-                        <img id="imagePreview" src="/images/recipe-placeholder.jpg" class="img-thumbnail" style="max-height: 200px; width: 100%; object-fit: cover;" />
-                    </div>
-                </div>
-            </div>
-
-            <div class="row mb-4">
-                <div class="col-md-6">
-                    <h3>Ingredients</h3>
-                    <div id="ingredientList">
-                        <div class="ingredient-entry mb-2">
-                            <div class="row g-2">
-                                <div class="col-md-3">
-                                    <div class="form-floating">
-                                        <input type="text" name="Ingredients[0].Quantity" class="form-control" placeholder="Amount" />
-                                        <label>Amount</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-floating">
-                                        <input type="text" name="Ingredients[0].Unit" class="form-control" placeholder="Unit" />
-                                        <label>Unit</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="text" name="Ingredients[0].Name" class="form-control" placeholder="Ingredient" />
-                                        <label>Ingredient</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <button type="button" id="addIngredient" class="btn btn-outline-secondary">
-                        <i class="bi bi-plus-circle"></i> Add Ingredient
-                    </button>
+                <!-- Tags -->
+                <div class="mb-4">
+                    <label asp-for="TagsInput" class="form-label">Tags (comma separated)</label>
+                    <input asp-for="TagsInput" class="form-control"
+                           placeholder="breakfast, quick, vegetarian" />
                 </div>
 
-                <div class="col-md-6">
-                    <h3>Instructions</h3>
-                    <div id="instructionList">
-                        <div class="instruction-entry form-floating mb-2">
-                            <textarea name="Instructions[0].Step" class="form-control" style="height: 80px" placeholder="Step description"></textarea>
-                            <label>Step #1</label>
-                        </div>
-                    </div>
-                    <button type="button" id="addInstruction" class="btn btn-outline-secondary">
-                        <i class="bi bi-plus-circle"></i> Add Step
-                    </button>
+                <!-- Submit Button -->
+                <div>
+                    <button type="submit" class="btn btn-success">Create Recipe</button>
+                    <a href="/" class="btn btn-outline-secondary">Cancel</a>
                 </div>
             </div>
-
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-5">
-                <a asp-page="./Index" class="btn btn-outline-secondary me-md-2">Cancel</a>
-                <button type="submit" class="btn btn-outline-secondary">Save Recipe</button>
-            </div>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+
+            $("#addIngredient").click(function () {
+                const index = $(".ingredient-row").length;
+                const newRow = `
+                    <div class="row mb-3 ingredient-row">
+                        <div class="col-md-4">
+                            <label class="form-label">Quantityt</label>
+                           <input type="number" class="form-control" name="RecipeIngredients[${index}].Quantity" id="RecipeIngredients_${index}__Quantity" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Unit</label>
+                             <select class="form-select" name="RecipeIngredients[${index}].Unit" id="RecipeIngredients_${index}__Unit">
+                        <div class="col-md-3">
+                            <label class="form-label">Unit</label>
+                             <input class="form-control" list="ingredientOptions" name="RecipeIngredients[${index}].IngredientName" id="RecipeIngredients_${index}__IngredientName" placeholder="Ingredient name" />
+                        </div>
+                        <div class="col-md-1 ">
+                            <button type="button" class="btn btn-outline-danger remove-item">✕</button>
+                        </div>
+                    </div>
+                `;
+                $("#ingredientsList").append(newRow);
+            });
+
+
+            $(document).on("click", ".remove-item", function () {
+                $(this).closest(".ingredient-row").remove();
+            });
+
+
+            $("#addInstruction").click(function () {
+                const index = $(".instruction-row").length;
+                const stepNumber = index + 1;
+                const newRow = `
+                    <div class="row mb-3 instruction-row">
+                        <div class="col-1 text-center">
+                            <label class="form-label">Step</label>
+                            <input type="number" class="form-control step-number" name="Instructions[${index}].StepNumber" id="Instructions_${index}__StepNumber" value="${stepNumber}" readonly />
+                        </div>
+                        <div class="col-md-10">
+                            <label class="form-label">Instruction</label>
+                            <textarea class="form-control" name="Instructions[${index}].InstructionText" id="Instructions_${index}__InstructionText" rows="2"></textarea>
+                        </div>
+                        <div class="col-md-1 d-flex align-items-end">
+                            <button type="button" class="btn btn-outline-danger remove-instruction">✕</button>
+                        </div>
+                    </div>
+                `;
+                $("#instructionsList").append(newRow);
+            });
+
+
+            $(document).on("click", ".remove-instruction", function () {
+                $(this).closest(".instruction-row").remove();
+
+
+                $(".instruction-row").each(function (index) {
+                    const stepNumber = index + 1;
+                    $(this).find(".step-number").val(stepNumber);
+
+
+                    const stepInput = $(this).find(".step-number");
+                    const textInput = $(this).find("textarea");
+
+                    stepInput.attr("name", `Instructions[${index}].StepNumber`);
+                    stepInput.attr("id", `Instructions_${index}__StepNumber`);
+
+                    textInput.attr("name", `Instructions[${index}].InstructionText`);
+                    textInput.attr("id", `Instructions_${index}__InstructionText`);
+                });
+            });
+        });
+    </script>
+}
