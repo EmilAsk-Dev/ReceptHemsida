@@ -77,14 +77,17 @@
                         </div>
                     }
                 </div>
-
             </nav>
+
             <div class="search-bar">
-                <input type="text" placeholder="Search recipes...">
-                <button>
-                    <img src="/svg/search.svg" alt="Search">
-                </button>
+                <form method="get" action="/recipe/recipe" style="display: flex; align-items: center;">
+                    <input type="text" name="search" placeholder="Search recipes...">
+                    <button type="submit">
+                        <img src="/svg/search.svg" alt="Search">
+                    </button>
+                </form>
             </div>
+
         </div>
     </header>
 

@@ -35,11 +35,6 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-body {
-    background-color: var(--light);
-    color: var(--dark);
-    line-height: 1.6;
-}
 
 .container {
     max-width: 1200px;
@@ -81,16 +76,16 @@ header {
     gap: 30px;
 }
 
-    .nav-links a {
-        text-decoration: none;
-        color: var(--dark);
-        font-weight: 500;
-        transition: color 0.3s;
+.nav-links a {
+    text-decoration: none;
+    color: var(--dark);
+    font-weight: 500;
+    transition: color 0.3s;
     }
 
-        .nav-links a:hover {
-            color: var(--primary);
-        }
+.nav-links a:hover {
+color: var(--primary);
+}
 .user-btn {
     background: none;
     cursor: pointer;
@@ -723,9 +718,7 @@ iframe {
 }
 
 .recipe-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
+    padding: 20px;
 }
 
 .ingredients-section,
@@ -802,7 +795,8 @@ iframe {
 }
 
 .recipe-tags {
-    margin-top: 30px;
+    display: flex;
+    gap: 10px; 
 }
 
 .tags-list {

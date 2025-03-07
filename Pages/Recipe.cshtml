@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "recipe/{id?}"
 @model ReceptHemsida.Pages.RecipeModel
 @{
     ViewData["Title"] = "All Recipes";
@@ -69,34 +69,71 @@
         {
             @foreach (var recipe in Model.Recipes)
             {
-                <div class="col-md-4">
-                    <div class="recipe-card"
-                         data-category="@recipe.Category"
-                         data-cooktime="@recipe.CookTime"
-                         data-difficulty="@recipe.Difficulty">
-                        <img src="@(string.IsNullOrEmpty(recipe.ImageUrl) ? "/images/default-recipe.jpg" : recipe.ImageUrl)"
-                             alt="@recipe.Title" class="recipe-img">
-                        <div class="recipe-content">
-                            <h3 class="recipe-title">@recipe.Title</h3>
-                            <div class="recipe-meta">
-                                <span><i class="bi bi-clock"></i> @recipe.CookTime min</span>
-                                <span><i class="bi bi-award"></i> @recipe.Difficulty</span>
-                                <span><i class="bi bi-tag"></i> @recipe.Category</span>
-                            </div>
+                <div class="recipe-card" data-category="@recipe.Category" data-cooktime="@recipe.CookTime">
+                    <img src="@(string.IsNullOrEmpty(recipe.ImageUrl) ? "/images/default-recipe.jpg" : recipe.ImageUrl)" alt="@recipe.Title" class="recipe-img">
+                    <div class="recipe-content">
+                        <h3 class="recipe-title">@recipe.Title</h3>
+                        <div class="recipe-meta">
+                            <span>@recipe.CookTime min</span>
+                            <span>@recipe.Difficulty</span>
                         </div>
                         <p class="recipe-desc">@recipe.Description</p>
                         <div class="recipe-footer">
-                            <a href="/recipe/details/@recipe.Id" class="btn">View Recipe</a>
+                            <div class="recipe-tags">
+                                @foreach (var tag in recipe.Tags)
+                                {
+                                    <span class="recipe-tag">@tag</span>
+                                }
+                            </div>
+                            <a asp-page="/RecipeDetails" asp-route-id="@recipe.Id" class="btn">View Recipe</a>
                         </div>
                     </div>
                 </div>
             }
-        }
-        else
-        {
-            <div id="noRecipesMessage" class="no-recipes text-center">
-                <p>No recipes found with the chosen filters.</p>
-            </div>
-        }
-    </div>
-</div>
+        </div>
+    </section>
+    
+    @if (!Model.Recipes.Any())
+    {
+        <div id="noRecipesMessage" class="no-recipes">
+            <p>No recipes were found with the current filters.</p>
+        </div>
+    }
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const categoryFilter = document.getElementById("categoryFilter");
+            categoryFilter.addEventListener("change", function() {
+                const category = this.value;
+                if (category === "all") {
+                    window.location.href = "/recipe";
+                } else {
+                    window.location.href = "/recipe/category/" + category;
+                }
+            });
+
+            const timeFilter = document.getElementById("timeFilter");
+            timeFilter.addEventListener("change", function() {
+                const cookTime = this.value;
+                const recipeCards = document.querySelectorAll(".recipe-card");
+                let visibleCount = 0;
+                
+                recipeCards.forEach(card => {
+                    const cardCookTime = parseInt(card.getAttribute("data-cooktime"));
+                    
+                    if (cookTime === "all" || cardCookTime <= parseInt(cookTime)) {
+                        card.style.display = "block";
+                        visibleCount++;
+                    } else {
+                        card.style.display = "none";
+                    }
+                });
+                
+                document.getElementById("noRecipesMessage").style.display = 
+                    visibleCount === 0 ? "block" : "none";
+            });
+        });
+    </script>
+}

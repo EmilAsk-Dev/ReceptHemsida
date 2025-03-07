@@ -54,7 +54,7 @@ else{
                                     <span class="recipe-tag">@tag</span>
                                 }
                             </div>
-                            <a href="/recipe/details/@recipe.Id" class="btn">View Recipe</a>
+                            <a asp-page="/RecipeDetails" asp-route-id="@recipe.Id" class="btn">View Recipe</a>
                         </div>
                     </div>
                     @if (isCurrentUserProfile)

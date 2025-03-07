@@ -57,13 +57,14 @@ namespace ReceptHemsida.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPostDeleteRecipe(string recipeId)
+        public async Task<IActionResult> OnPostDeleteRecipeAsync(string recipeId)
         {
             var currentUser = await _userManager.GetUserAsync(User);
 
             // Use RecipeService to delete the recipe
-            await _recipeService.DeleteRecipeAsync(currentUser.Id, recipeId);
+            await _recipeService.DeleteRecipeAsync(recipeId, currentUser.Id);
 
+            // Redirect back to the user page after deletion
             return RedirectToPage("/User", new { username = currentUser.UserName });
         }
 

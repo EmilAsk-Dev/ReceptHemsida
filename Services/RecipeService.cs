@@ -42,7 +42,8 @@ namespace ReceptHemsida.Services
                     .Include(r => r.User) // Optionally include user information (creator of the recipe)
                     .Include(r => r.RecipeIngredients) // Optionally include ingredients
                     .Include(r => r.Comments) // Optionally include comments
-                    .Include(r => r.Favorites) // Optionally include favorites
+                    .Include(r => r.Favorites)
+                    .Include(r => r.Instructions)// Optionally include favorites
                     .ToListAsync(); // Return the list of recipes
             }
             catch (Exception ex)
@@ -51,19 +52,26 @@ namespace ReceptHemsida.Services
                 return new List<Recipe>(); // Return an empty list if there is an error
             }
         }
-        
+
 
         public async Task<Recipe> GetRecipeByIdAsync(string id)
         {
             try
             {
                 return await _context.Recipes
-                    .FirstOrDefaultAsync(r => r.Id == id); // Fetches a single recipe by its ID
+                    .Include(r => r.Instructions)
+                    .Include(r => r.RecipeIngredients)
+                        .ThenInclude(ri => ri.Ingredient)
+                    .Include(r => r.Comments)
+                        .ThenInclude(c => c.User)
+                    .Include(r => r.Favorites)
+                    .Include(r => r.User)
+                    .FirstOrDefaultAsync(r => r.Id == id);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error fetching recipe by ID: {RecipeId}", id);
-                return null; // Return null if no recipe is found
+                return null;
             }
         }
 
@@ -78,7 +86,7 @@ namespace ReceptHemsida.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error adding recipe: {RecipeTitle}", recipe.Title);
-                
+
             }
         }
 
@@ -95,12 +103,12 @@ namespace ReceptHemsida.Services
             }
         }
 
-        public async Task DeleteRecipeAsync(string id, string currentUserId)
+        public async Task DeleteRecipeAsync(string recipeId, string currentUserId)
         {
             try
             {
                 // Fetch the recipe by its ID
-                var recipe = await GetRecipeByIdAsync(id);
+                var recipe = await GetRecipeByIdAsync(recipeId);
 
                 // Check if the recipe exists and is created by the current user
                 if (recipe != null && recipe.UserId == currentUserId)
@@ -112,7 +120,7 @@ namespace ReceptHemsida.Services
                 {
                     if (recipe == null)
                     {
-                        _logger.LogWarning("Recipe with ID: {RecipeId} not found", id);
+                        _logger.LogWarning("Recipe with ID: {RecipeId} not found", recipeId);
                     }
                     else
                     {
@@ -122,10 +130,11 @@ namespace ReceptHemsida.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error deleting recipe with ID: {RecipeId}", id);
+                _logger.LogError(ex, "Error deleting recipe with ID: {RecipeId}", recipeId);
             }
-
         }
+
+
         public async Task<List<Recipe>> SearchRecipesAsync(string searchTerm)
         {
             try
