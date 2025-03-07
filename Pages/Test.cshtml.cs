@@ -82,10 +82,8 @@ namespace ReceptHemsida.Pages
             Recipe.Id = Guid.NewGuid().ToString();
             Recipe.CreatedAt = DateTime.UtcNow;
 
-            
             Recipe.Tags ??= new List<string>();
 
-            
             if (!string.IsNullOrWhiteSpace(TagsInput))
             {
                 Recipe.Tags = TagsInput.Split(',')
