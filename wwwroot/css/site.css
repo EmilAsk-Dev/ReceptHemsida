@@ -121,14 +121,53 @@ color: var(--primary);
     align-items: center;
 }
 .modal-content {
-    background-color: white;
+     background-color: white;
     padding: 20px;
     border-radius: 10px;
     text-align: center;
     width: 400px;
-    height:450px;
+    height:550px;
+    border-radius: 10px;
+   
 }
+.feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+    .feature-list li {
+        display: flex;
+        align-items: flex-start;
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+        .feature-list li::before {
+            content: "";
+            width: 35px;
+            height: 30px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            margin-right: 10px;
+        }
+        .feature-list li.heart::before {
+            background-image: url('/svg/heart.svg'); /* Byt ut med din ikon */
+        }
 
+        .feature-list li.folder::before {
+            background-image: url('/svg/folder.svg'); /* Byt ut med din ikon */
+        }
+
+        .feature-list li.article::before {
+            background-image: url('/svg/article.svg'); /* Byt ut med din ikon */
+        }
+
+/* Knappar bredvid varandra */
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
 .close {
     position: absolute;
     top: 15px;
@@ -140,12 +179,11 @@ color: var(--primary);
     display: inline-block;
     background: var(--primary);
     color: white;
-    padding: 12px 30px;
-    border-radius: 30px;
+    padding: 5px 35px;
+    border-radius: 20px;
     text-decoration: none;
     font-weight: bold;
     transition: background 0.3s;
-    width:50%;
     text-align:center;
 }
 
@@ -205,7 +243,7 @@ color: var(--primary);
 .btn {
     background-color: #228B22;  
     color: white;
-    padding: 3px 25px;
+    padding: 3px;
     font-size: 0.8rem;
     border-radius: 5px;
     text-decoration: none;
@@ -593,10 +631,13 @@ footer {
     .submit:hover {
         background: var(--secondary);
     }
-.containerRecipe {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
+.container {
+   /* display: flex;*/
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    max-width: 1000px;
+    margin: auto;
 }
 .reg-container {
     display: flex;
@@ -625,9 +666,6 @@ iframe {
     border-radius: 10px;
 }
 
-/*Addrecipe*/
-
-/*User*/
 
 
 
@@ -779,22 +817,65 @@ iframe {
     padding: 20px;
     border-radius: 10px;
 }
+/*AddRecipe*/
+.create-recipe-header {
+    background: url('/Svg/Addrecipe-hero.jpg') no-repeat center center/cover;
+    height: 300px;
+    display: flex;
+    flex-direction:column;
+    border-radius:20px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    position: relative;
+}
+    .create-recipe-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5); /* Ändra 0.5 för att justera mörkheten (högre = mörkare) */
+        z-index: 1;
+        border-radius:20px;
+    }
+
+    .create-recipe-header h1  {
+        position: relative;
+        z-index: 2; /* Gör så att texten ligger ovanpå overlayn */
+        font-size: 2.5rem;
+        padding: 15px 30px;
+    }
+    .create-recipe-header .subheading {
+        position: relative;
+        z-index: 2;
+        font-size: 1.2rem; /* Gör texten större */
+        font-weight: 500;
+        opacity: 0.9; /* Lätt transparens för snyggare stil */
+        margin-top: 5px;
+        padding: 8px 15px;
+        border-radius: 5px;
+    }
+
 /*Recipe*/
 
 .hero-section {
     background: url('/RecipeProfile/hero_recipe.jpg') no-repeat center center/cover;
-    height: 500px;
+    height: 400px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     position: relative;
     border-bottom-left-radius: 50px;
+    border-bottom-left-radius: 50px;
     border-bottom-right-radius: 50px;
     overflow: hidden;
     text-align: center;
-    width: 40vw; /* Gör sektionen fullbredd */
-    max-width: 100%; /* Säkerställer att den tar hela bredden */
+    width: 40vw; 
+    max-width: 100%; 
     border-bottom-left-radius: 50px;
     border-bottom-right-radius: 50px;
     overflow: hidden;
@@ -881,4 +962,14 @@ iframe {
     background: white;
     border-radius: 10px;
     border: 1px solid #ccc;
+}
+.btn-instruction {
+    background-color: rgb(125, 179, 125);
+    color: white;
+    padding: 3px;
+    font-size: 0.8rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: normal;
+    transition: 0.3s;
 }

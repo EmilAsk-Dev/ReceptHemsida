@@ -5,90 +5,68 @@
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
-@if (Model.SingleRecipe != null)
-{
-    
-    <div class="recipe-details">
-        <h2>@Model.SingleRecipe.Title</h2>
-        <img src="@Model.SingleRecipe.ImageUrl" alt="@Model.SingleRecipe.Title" class="recipe-img"/>
-        <div class="recipe-meta">
-            <span><i class="bi bi-clock"></i> @Model.SingleRecipe.CookTime min</span>
-            <span><i class="bi bi-award"></i> @Model.SingleRecipe.Difficulty</span>
-            <span><i class="bi bi-tag"></i> @Model.SingleRecipe.Category</span>
-        </div>
-        <p>@Model.SingleRecipe.Description</p>
-        
-        <h3>Instructions:</h3>
-        <ol class="recipe-instructions">
-            @foreach (var step in Model.SingleRecipe.Instructions.Select((text, index) => new { text, index }).ToList())
-            {
-                <li>
-                    <span class="step-number">@(@step.index + 1).</span>
-                    <p>@step.text</p>
-                </li>
-            }
-        </ol>
-        
-        <a href="/recipe" class="btn">Back to All Recipes</a>
-    </div>
-}
-else
-{
-    
-    <div class="page-header">
-        <h1>Our Recipes</h1>
-        <p>Discover our delicious recipes for all occasions</p>
-        
-        @if (!string.IsNullOrEmpty(Model.Search))
-        {
-            <div class="search-results-info">
-                <p>Search results for: <strong>@Model.Search</strong></p>
-                <a href="/recipe" class="btn btn-sm">Clear Search</a>
+<!-- Hero Section with Background Image -->
+<div class="hero-section text-center position-relative">
+    <div class="overlay"></div>
+    <div class="container-fluid position-relative text-white py-5">
+
+        <!-- Title Above Search -->
+        <h1 class="fw-bold search-title">All recipes</h1>
+
+       @*  <!-- Search Input Centered -->
+        <form method="get">
+            <div class="search-container">
+                <input type="text" name="Search" value="@Model.Search" class="form-control search-input" placeholder="Search recipe of your choice...">
+                <button type="submit" class="btn search-btn"><i class="fas fa-search"></i></button>
             </div>
-        }
-        
-        @if (!string.IsNullOrEmpty(Model.Category))
-        {
-            <div class="category-filter-info">
-                <p>Filtered by category: <strong>@Model.Category</strong></p>
-                <a href="/recipe" class="btn btn-sm">Clear Filter</a>
+        </form> *@
+    </div>
+
+    <!-- Filter Section Below Search -->
+    <div class="container filter-container">
+        <div class="filter-card p-3">
+            <h4 class="mb-3 text-center fw-bold filter-title">Filter Your Recipes</h4>
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <label for="categoryFilter" class="form-label filter-label">Category:</label>
+                    <select id="categoryFilter" class="form-select">
+                        <option value="all">All Categories</option>
+                        @foreach (var category in Enum.GetValues(typeof(ReceptHemsida.Models.RecipeCategory)))
+                        {
+                            <option value="@category">@category</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="timeFilter" class="form-label filter-label">Cooking Time:</label>
+                    <select id="timeFilter" class="form-select">
+                        <option value="all">Select Time</option>
+                        <option value="15">Under 15 min</option>
+                        <option value="30">Under 30 min</option>
+                        <option value="60">Under 60 min</option>
+                        <option value="120">Under 2 hours</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="difficultyFilter" class="form-label filter-label">Difficulty:</label>
+                    <select id="difficultyFilter" class="form-select">
+                        <option value="all">All Levels</option>
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
             </div>
-        }
-    </div>
-    
-    <div class="filters-container">
-        <div class="filter-group">
-            <label for="categoryFilter">Search Category:</label>
-            <select id="categoryFilter" class="filter-select">
-                <option value="all">All Categories</option>
-                @foreach (var category in Enum.GetValues(typeof(ReceptHemsida.Models.RecipeCategory)))
-                {
-                    <option value="@((int)category)" selected="@(Model.Category == category.ToString())">@category</option>
-                }
-            </select>
-        </div>
-        
-        <div class="filter-group">
-            <label for="timeFilter">Cooking Time:</label>
-            <select id="timeFilter" class="filter-select">
-                <option value="all">Choose between</option>
-                <option value="15">Under 15 min</option>
-                <option value="30">Under 30 min</option>
-                <option value="60">Under 60 min</option>
-                <option value="120">Under 2 timmar</option>
-            </select>
-        </div>
-        
-        <div class="filter-group">
-            <form method="get" action="/recipe/recipe">
-                <input type="text" name="search" placeholder="Search recipes..." value="@Model.Search" />
-                <button type="submit" class="btn btn-sm">Search</button>
-            </form>
         </div>
     </div>
-    <section class="recipes-container">
-        <h2 class="section-title">Popular Recipes</h2>
-        <div class="recipes">
+</div>
+<!-- Recipes Display Section -->
+<div class="container">
+    <div class="row">
+        @if (Model.Recipes.Any())
+        {
             @foreach (var recipe in Model.Recipes)
             {
                 <div class="recipe-card" data-category="@recipe.Category" data-cooktime="@recipe.CookTime">
