@@ -5,52 +5,235 @@
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
+<style>
+    :root {
+        --primary-color: #10790F;
+        --secondary-color: #4ECDC4;
+        --text-color: #2D3436;
+        --background-color: #F9F9F9;
+        --border-color: #DFE6E9;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        line-height: 1.6;
+    }
+
+    .recipe-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        background-color: white;
+        padding: 40px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .recipe-header {
+        display: flex;
+        gap: 30px;
+        margin-bottom: 30px;
+    }
+
+    .recipe-image img {
+        width: 400px;
+        height: 400px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+    .recipe-info h1 {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        color: var(--primary-color);
+    }
+
+    .recipe-meta {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+
+    .recipe-stats span {
+        margin-right: 10px;
+        color: #666;
+    }
+
+    .recipe-description {
+        margin-top: 15px;
+    }
+
+    .recipe-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+    }
+
+    .ingredients-section,
+    .instructions-section {
+        background-color: var(--background-color);
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .ingredient-list .ingredient-group {
+        margin-bottom: 20px;
+    }
+
+    .ingredient-list h3 {
+        border-bottom: 2px solid var(--primary-color);
+        padding-bottom: 5px;
+        margin-bottom: 10px;
+    }
+
+    .ingredient-list ul {
+        list-style: none;
+    }
+
+    .ingredient-list li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .instructions-list {
+        list-style-position: inside;
+    }
+
+    .instruction-step {
+        margin-bottom: 15px;
+    }
+
+    .recipe-tags {
+        margin-top: 30px;
+    }
+
+    .tags-list {
+        display: flex;
+        gap: 10px;
+    }
+
+    .tag {
+        background-color: var(--border-color);
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 0.9rem;
+    }
+
+    .recipe-serving-suggestion {
+        margin-top: 30px;
+        background-color: var(--background-color);
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .btn {
+        display: inline-block;
+        background-color: var(--primary-color);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        margin-top: 20px;
+        transition: background-color 0.3s;
+    }
+
+        .btn:hover {
+            background-color: #0a5a0a;
+        }
+
+    .error-message {
+        text-align: center;
+        padding: 40px;
+    }
+
+        .error-message h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+</style>
+
 @if (Model.Recipe != null)
 {
-    try
-    {
-        <div class="recipe-details">
-            <h2>@Model.Recipe.Title</h2>
-            <img src="@(string.IsNullOrEmpty(Model.Recipe.ImageUrl) ? "/images/default-recipe.jpg" : Model.Recipe.ImageUrl)"
-            alt="@Model.Recipe.Title" class="recipe-img" />
-            <div class="recipe-meta">
-                <span><i class="bi bi-clock"></i> @Model.Recipe.CookTime min</span>
-                <span><i class="bi bi-award"></i> @Model.Recipe.Difficulty</span>
-                <span><i class="bi bi-tag"></i> @Model.Recipe.Category</span>
+    <div class="recipe-container">
+        <div class="recipe-header">
+            <div class="recipe-image">
+                <img src="@(string.IsNullOrEmpty(Model.Recipe.ImageUrl) ? "/images/default-recipe.jpg" : Model.Recipe.ImageUrl)" alt="@Model.Recipe.Title">
             </div>
-            <p>@Model.Recipe.Description</p>
+            <div class="recipe-info">
+                <h1>@Model.Recipe.Title</h1>
+                <div class="recipe-meta">
+                    <div class="recipe-stats">
+                        <span><i class="bi bi-clock"></i> @Model.Recipe.CookTime min</span>
+                        <span><i class="bi bi-award"></i> @Model.Recipe.Difficulty</span>
+                        <span><i class="bi bi-tag"></i> @Model.Recipe.Category.ToString()</span>
+                    </div>
+                </div>
+                <p class="recipe-description">@Model.Recipe.Description</p>
+            </div>
+        </div>
 
+        <div class="recipe-content">
             @if (Model.Recipe.RecipeIngredients != null && Model.Recipe.RecipeIngredients.Any())
             {
-                <h3>Ingredients:</h3>
-                <ul class="recipe-ingredients">
-                    @foreach (var recipeIngredient in Model.Recipe.RecipeIngredients)
+                <div class="ingredients-section">
+                    <h2>Ingredients</h2>
+                    <div class="ingredient-list">
+                        <div class="ingredient-group">
+                            <ul>
+                                @foreach (var recipeIngredient in Model.Recipe.RecipeIngredients)
+                                {
+                                    <li>
+                                        <span>@recipeIngredient.Quantity @recipeIngredient.Unit @recipeIngredient.Ingredient.Name</span>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="instructions-section">
+                <h2>Instructions</h2>
+                <ul class="instructions-list">
+                    @foreach (var instruction in Model.Recipe.Instructions.OrderBy(i => i.StepNumber))
                     {
                         <li>
-                            @recipeIngredient.Quantity @recipeIngredient.Unit of @recipeIngredient.Ingredient.Name
+                            <div class="instruction-step">
+                                <p>@instruction.StepNumber. @instruction.InstructionText</p>
+                            </div>
                         </li>
                     }
                 </ul>
-            }
-
-            <h3>Instructions:</h3>
-            <ol class="recipe-instructions">
-                @foreach (var step in Model.Recipe.Instructions)
-                {
-                    <li>
-                        <span class="step-number">@(step.StepNumber + 1).</span>
-                        <p>@step.InstructionText</p>
-                    </li>
-                }
-            </ol>
-
-            <a asp-page="/recipe" class="btn">Back to All Recipes</a>
+            </div>
         </div>
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine(ex.Message);
-    }
+
+        <div class="recipe-tags">
+            <h3>Tags</h3>
+            <div class="tags-list">
+                <span class="tag">@Model.Recipe.Category.ToString()</span>
+                @if (Model.Recipe.Tags != null && Model.Recipe.Tags.Any())
+                {
+                    @foreach (var tag in Model.Recipe.Tags)
+                    {
+                        <span class="tag">@tag</span>
+                    }
+                }
+
+            </div>
+
+        </div>
+
+        <a href="/recipe" class="btn">Back to All Recipes</a>
+    </div>
 }
 else
 {
