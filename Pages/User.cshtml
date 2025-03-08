@@ -60,7 +60,7 @@ else{
                     @if (isCurrentUserProfile)
                     {
                         <div class="recipe-owner-actions">
-                            <a href="/recipe/edit/@recipe.Id" class="btn btn-edit">Edit</a>
+                            <a asp-page="/AddRecipe" asp-route-id="@recipe.Id" class="btn btn-edit">Edit</a>
                             <form method="post" asp-page-handler="DeleteRecipe">
                                 <input type="hidden" name="recipeId" value="@recipe.Id" />
                                 <button type="submit" class="btn btn-delete">Delete</button>
@@ -94,7 +94,7 @@ else{
                                     <span class="recipe-tag">@tag</span>
                                 }
                             </div>
-                            <a href="/recipe/details/@recipe.Id" class="btn">View Recipe</a>
+                            <a asp-page="/recipe/details/@recipe.Id" class="btn">View Recipe</a>
                         </div>
                     </div>
                     @if (isCurrentUserProfile)

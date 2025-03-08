@@ -98,32 +98,31 @@
                                 </div>
 
                                 
-                                <div class="row mb-3 ingredient-row align-items-center">
-                                    <div class="col-md-3">
-                                        <input type="number" class="form-control" name="RecipeIngredients[0].Quantity" id="RecipeIngredients_0__Quantity" min="0" step="0.1" />
+                                @for (int i = 0; i < Model.RecipeIngredients.Count; i++)
+                                {
+                                    <div class="row mb-3 ingredient-row align-items-center">
+                                        <div class="col-md-3">
+                                            <input type="number" class="form-control" name="RecipeIngredients[@i].Quantity"
+                                                   id="RecipeIngredients_@(i)__Quantity" min="0" step="0.1"
+                                                   value="@Model.RecipeIngredients[i].Quantity" />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" class="form-control" name="RecipeIngredients[@i].Unit"
+                                                   id="RecipeIngredients_@(i)__Unit" list="unitOptions"
+                                                   placeholder="g, ml, etc." value="@Model.RecipeIngredients[i].Unit" />
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input class="form-control" list="ingredientOptions"
+                                                   name="RecipeIngredients[@i].IngredientName"
+                                                   id="RecipeIngredients_@(i)__IngredientName"
+                                                   placeholder="Ingredient name"
+                                                   value="@Model.RecipeIngredients[i].IngredientName" />
+                                        </div>
+                                        <div class="col-md-1">
+                                            <button type="button" class="btn btn-outline-danger btn-sm remove-item">&times;</button>
+                                        </div>
                                     </div>
-                                    <div class="col-md-3">
-                                      <input type="text" class="form-control" name="RecipeIngredients[0].Unit" id="RecipeIngredients_0__Unit" list="unitOptions" placeholder="g, ml, etc." />
-                                      <datalist id="unitOptions">
-                                        
-                                      </datalist>
-                                    </div>
-                                    <div class="col-md-5">
-                                        <input class="form-control" list="ingredientOptions"
-                                               name="RecipeIngredients[0].IngredientName"
-                                               id="RecipeIngredients_0__IngredientName"
-                                               placeholder="Ingredient name" />
-                                        <datalist id="ingredientOptions">
-                                            @foreach (var ingredient in Model.AvailableIngredients)
-                                            {
-                                                <option value="@ingredient.Name"></option>
-                                            }
-                                        </datalist>
-                                    </div>
-                                    <div class="col-md-1">
-                                        <button type="button" class="btn btn-outline-danger btn-sm remove-item">&times;</button>
-                                    </div>
-                                </div>
+                                }
                             </div>
                         </div>
                     </div>
@@ -141,36 +140,40 @@
                         <div class="card-body p-3">
                             <div id="instructionsList">
                                 
-                                <div class="row mb-3 instruction-row">
-                                    <div class="col-auto d-flex align-items-center">
-                                        <div class="step-number rounded-circle bg-primary text-white d-flex justify-content-center align-items-center" style="width: 30px; height: 30px;">
-                                            <span>1</span>
-                                            <input type="hidden" name="Instructions[0].StepNumber" id="Instructions_0__StepNumber" value="1" />
+                                @for (int i = 0; i < Model.Instructions.Count; i++)
+                                {
+                                    <div class="row mb-3 instruction-row">
+                                        <div class="col-auto d-flex align-items-center">
+                                            <div class="step-number rounded-circle bg-primary text-white d-flex justify-content-center align-items-center" style="width: 30px; height: 30px;">
+                                                <span>@Model.Instructions[i].StepNumber</span>
+                                                <input type="hidden" name="Instructions[@i].StepNumber" id="Instructions_@(i)__StepNumber" value="@Model.Instructions[i].StepNumber" />
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <textarea class="form-control"
+                                                      name="Instructions[@i].InstructionText"
+                                                      id="Instructions_@(i)__InstructionText"
+                                                      rows="2"
+                                                      placeholder="Enter instruction here...">@Model.Instructions[i].InstructionText</textarea>
+                                        </div>
+                                        <div class="col-auto d-flex align-items-center">
+                                            <button type="button" class="btn btn-outline-danger btn-sm remove-instruction">
+                                                <i class="bi bi-x"></i>
+                                            </button>
                                         </div>
                                     </div>
-                                    <div class="col">
-                                        <textarea class="form-control"
-                                                  name="Instructions[0].InstructionText"
-                                                  id="Instructions_0__InstructionText"
-                                                  rows="2"
-                                                  placeholder="Enter instruction here..."></textarea>
-                                    </div>
-                                    <div class="col-auto d-flex align-items-center">
-                                        <button type="button" class="btn btn-outline-danger btn-sm remove-instruction">
-                                            <i class="bi bi-x"></i>
-                                        </button>
-                                    </div>
-                                </div>
+                                }
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <input type="hidden" asp-for="Recipe.Id" />
             <!-- Submit Buttons - Better positioned at bottom -->
             <div class="text-center mt-4">
                 <button type="submit" class="btn btn-success btn-lg px-5">
-                    <i class="bi bi-check-circle me-2"></i>Create Recipe
+                    <i class="bi bi-check-circle me-2"></i>Save Recipe
                 </button>
                 <a href="/" class="btn btn-outline-secondary btn-lg ms-3">Cancel</a>
             </div>
@@ -218,10 +221,8 @@
                             <input type="number" class="form-control" name="RecipeIngredients[${index}].Quantity" id="RecipeIngredients_${index}__Quantity" min="0" step="0.1" />
                         </div>
                         <div class="col-md-3">
-                                      <input type="text" class="form-control" name="RecipeIngredients[0].Unit" id="RecipeIngredients_0__Unit" list="unitOptions" placeholder="g, ml, etc." />
-                                      <datalist id="unitOptions">
-
-                                      </datalist>
+                        <input type="text" class="form-control" name="RecipeIngredients[${index}].Unit" id="RecipeIngredients_${index}__Unit" list="unitOptions" placeholder="g, ml, etc." />
+                        <datalist id="unitOptions"></datalist>
                                     </div>
                         <div class="col-md-5">
                             <input class="form-control" list="ingredientOptions" name="RecipeIngredients[${index}].IngredientName" id="RecipeIngredients_${index}__IngredientName" placeholder="Ingredient name" />
