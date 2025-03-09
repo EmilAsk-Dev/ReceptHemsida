@@ -23,8 +23,15 @@
                     <div class="logo">
                         Benjas<span>Cookingstation</span>
                         <img src="/svg/Stekpanna.svg" alt="Stekpanna" class="pan-icon" />
+                      
                     </div>
                 </a>
+               @*  <div class="logo-container">
+                    <a asp-page="/Index">
+                        <img src="/svg/Frame 1.svg" alt="Benjas Cookingstation Logo" class="logo">
+                    </a>
+                </div> *@
+
 
                 <div class="nav-links">
                     @if (SignInManager.IsSignedIn(User))
@@ -33,17 +40,19 @@
 
                         <a asp-page="/AddRecipe">Add Recipe</a>
 
-                        <form method="post" asp-page="/Logout">
-                            <button type="submit">Logout</button>
-                        </form>
-
-
-                        <form method="get" asp-page="/User" asp-route-username="@currentUser.UserName">
-                            <button type="submit">@currentUser.UserName</button>
+                        <form method="get" asp-page="/User" asp-route-username="@currentUser.UserName" >
+                            <button type="submit" class="user-btn">@currentUser.UserName</button>
                         </form>
 
                         <form method="get" asp-page="/Usersettings">
-                            <button type="submit">User settings</button>
+                            <button type="submit" class="icon-btn" title="User Settings">
+                                <img src="/svg/gearwheel.svg"/ alt="User Settings">
+                            </button>
+                        </form>
+                        <form method="post" asp-page="/Logout">
+                            <button type="submit" class="icon-btn" title="Logout">
+                                <img src="/svg/peace-out.svg" alt="Logout"/>
+                            </button>
                         </form>
                     }
                     else
@@ -61,9 +70,9 @@
                                 <h2 style="font-weight:bold;font-family:ITC Cheltenham W05, georgia, serif">Spara och inspireras av dina favoritrecept</h2>
                                 <h3 style="font-family:ITC Cheltenham W05, georgia, serif">Skapa ett gratiskonto</h3>
                                 <ul class="feature-list">
-                                    <li class="heart">Håll ordning på dina recept, genom lätt att ha dem samlade.</li>
-                                    <li class="folder">Skapa dina egna veckomenyer. Spara dina favoriter!</li>
-                                    <li class="article">Gäster över? Spara artiklar med tips och tester som finns för att inspirera dig.</li>
+                                    <li class="heart">Keep your recipes organized by easily gathering them in one place</li>
+                                    <li class="folder">Create your own weekly menus and save your favorites!</li>
+                                    <li class="article">Guests coming over? Save articles with tips and reviews to inspire you.</li>
                                 </ul>
                                 <div class="button-container">
                                     <form method="get" asp-page="/Login">
@@ -83,7 +92,7 @@
                 <form method="get" action="/recipe/recipe" style="display: flex; align-items: center;">
                     <input type="text" name="search" placeholder="Search recipes...">
                     <button type="submit">
-                        <img src="/svg/search.svg" alt="Search">
+                        <img src="/svg/search.svg" alt="Search" >
                     </button>
                 </form>
             </div>

@@ -6,20 +6,21 @@
     bool isCurrentUserProfile = Model.IsCurrentUserProfile;
     bool UserExist = Model.UserExist;
 }
+@* <img src="@Model.ProfileUser.ProfileImageUrl" alt="@Model.ProfileUser.UserName Profile Picture"> *@
 
 @if (!UserExist)
 {
     <a>Sorry this user dosent exist</a>
 }
 else{
-    <!-- User Profile Header -->
+   
     <section class="container">
         <div class="user-profile-header">
             <div class="user-avatar">
                 @* <img src="@Model.ProfileUser.ProfileImageUrl" alt="@Model.ProfileUser.UserName Profile Picture"> *@
             </div>
-            <div class="user-info">
-                <h1>@Model.ProfileUser.UserName's Profile</h1>
+            <div  class="user-info">
+                <h1 >@Model.ProfileUser.UserName's Profile</h1>
                 @if (isCurrentUserProfile)
                 {
                     <p>This is your personal profile</p>
