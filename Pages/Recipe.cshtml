@@ -69,8 +69,9 @@
 
 
 
-<div class="container">
-    <div class="row">
+<section class="recipes-container">
+    <h2 class="section-title">All Recipes</h2>
+    <div class="recipes">
         @if (Model.Recipes.Any())
         {
             @foreach (var recipe in Model.Recipes)
@@ -96,8 +97,16 @@
                     </div>
                 </div>
             }
-        <div/>
-    <div />
+        }
+
+        @if (!Model.Recipes.Any())
+        {
+            <div id="noRecipesMessage" class="no-recipes">
+                <p>No recipes were found with the current filters.</p>
+            </div>
+        }
+    </div>
+</section>
 
         
     

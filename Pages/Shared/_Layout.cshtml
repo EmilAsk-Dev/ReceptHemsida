@@ -40,19 +40,17 @@
 
                         <a asp-page="/AddRecipe">Add Recipe</a>
 
-                        <form method="get" asp-page="/User" asp-route-username="@currentUser.UserName" >
-                            <button type="submit" class="user-btn">@currentUser.UserName</button>
+                        <form method="post" asp-page="/Logout">
+                            <button type="submit">Logout</button>
+                        </form>
+
+
+                        <form method="get" asp-page="/User" asp-route-username="@currentUser.UserName">
+                            <button type="submit">@currentUser.UserName</button>
                         </form>
 
                         <form method="get" asp-page="/Usersettings">
-                            <button type="submit" class="icon-btn" title="User Settings">
-                                <img src="/svg/gearwheel.svg"/ alt="User Settings">
-                            </button>
-                        </form>
-                        <form method="post" asp-page="/Logout">
-                            <button type="submit" class="icon-btn" title="Logout">
-                                <img src="/svg/peace-out.svg" alt="Logout"/>
-                            </button>
+                            <button type="submit">User settings</button>
                         </form>
                     }
                     else
