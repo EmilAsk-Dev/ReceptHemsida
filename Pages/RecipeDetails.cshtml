@@ -185,6 +185,7 @@
         </div>
 
         <div class="recipe-content">
+
             @if (Model.Recipe.RecipeIngredients != null && Model.Recipe.RecipeIngredients.Any())
             {
                 <div class="ingredients-section">
@@ -240,6 +241,16 @@
         @if (User.Identity.IsAuthenticated && UserManager.GetUserId(User) == Model.Recipe.UserId)
         {
             <a asp-page="/AddRecipe" asp-route-id="@Model.Recipe.Id" class="btn btn-primary">Edit Recipe</a>
+        }
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            <form method="post" asp-route-id="@Model.Recipe.Id">
+                <button class="btn" type="submit">
+                    @* (if else) *@
+                    @(Model.IsFavorited ? "Remove from Favorites" : "Add to Favorites")
+                </button>
+            </form>
         }
     </div>
 }

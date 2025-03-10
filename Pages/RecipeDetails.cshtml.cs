@@ -10,15 +10,20 @@ namespace ReceptHemsida.Pages
     public class RecipeDetailsModel : PageModel
     {
         private readonly RecipeService _recipeService;
-
+        private readonly FavoriteService _favoriteService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public Recipe Recipe { get; set; }
-        
-        public RecipeDetailsModel(RecipeService recipeService)
+        public bool IsFavorited { get; set; }
+
+        public RecipeDetailsModel(RecipeService recipeService, FavoriteService favoriteService, UserManager<ApplicationUser> userManager)
         {
             _recipeService = recipeService;
+            _favoriteService = favoriteService;
+            _userManager = userManager;
         }
-        
+
+
         public async Task<IActionResult> OnGetAsync(string id)
         {
 
@@ -28,8 +33,35 @@ namespace ReceptHemsida.Pages
             {
                 return BadRequest();
             }
-            
+
+            if (User.Identity.IsAuthenticated)
+            {
+                var userId = _userManager.GetUserId(User);
+                IsFavorited = await _favoriteService.IsRecipeFavoritedAsync(userId, id);
+            }
+
             return Page();
+        }
+
+        public async Task<IActionResult> OnPostAsync(string id)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Unauthorized();
+            }
+
+            var userId = _userManager.GetUserId(User);
+
+            if (await _favoriteService.IsRecipeFavoritedAsync(userId, id))
+            {
+                await _favoriteService.RemoveFavoriteAsync(userId, id);
+            }
+            else
+            {
+                await _favoriteService.AddFavoriteAsync(new Favorite { UserId = userId, RecipeId = id });
+            }
+
+            return RedirectToPage();
         }
     }
 }

@@ -23,8 +23,9 @@ namespace ReceptHemsida.Services
             {
                 return await _context.Favorites
                     .Where(f => f.UserId == userId)
+                    .Include(f => f.Recipe)
+                    .Include(r => r.User) // Include the recipe creator
                     .Select(f => f.Recipe)
-                    .Include(r => r.User) // Include the user who created the recipe
                     .ToListAsync();
             }
             catch (Exception ex)
