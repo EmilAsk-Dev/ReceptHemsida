@@ -184,6 +184,21 @@
             </div>
         </div>
 
+        <div>
+            <p>
+                Recipe by:
+                @if (Model.Recipe.UserId != null)
+                {
+                    var user = await UserManager.FindByIdAsync(Model.Recipe.UserId);
+
+                    if (user != null)
+                    {
+                        <a asp-page="/User" asp-route-username="@user.UserName">@user.UserName</a>
+                    }
+                }
+            </p>
+        </div>
+
         <div class="recipe-content">
 
             @if (Model.Recipe.RecipeIngredients != null && Model.Recipe.RecipeIngredients.Any())
