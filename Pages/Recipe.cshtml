@@ -1,4 +1,4 @@
-﻿@page "recipe/{id?}"
+﻿@page "/Recipe/{id?}"
 @model ReceptHemsida.Pages.RecipeModel
 @{
     ViewData["Title"] = "All Recipes";
@@ -9,11 +9,10 @@
 <div class="hero-section text-center position-relative">
     <div class="overlay"></div>
     <div class="container-fluid position-relative text-white py-5">
-
         <!-- Title Above Search -->
         <h1 class="fw-bold search-title">All recipes</h1>
 
-       @*  <!-- Search Input Centered -->
+        @*  <!-- Search Input Centered -->
         <form method="get">
             <div class="search-container">
                 <input type="text" name="Search" value="@Model.Search" class="form-control search-input" placeholder="Search recipe of your choice...">
@@ -28,46 +27,119 @@
             <h4 class="mb-3 text-center fw-bold filter-title">Filter Your Recipes</h4>
             <div class="row text-center">
                 <div class="col-md-4">
-                    <label for="categoryFilter" class="form-label filter-label">Category:</label>
-                    <select id="categoryFilter" class="form-select">
-                        <option value="all">All Categories</option>
-                        @foreach (var category in Enum.GetValues(typeof(ReceptHemsida.Models.RecipeCategory)))
+                    <form method="get" id="categoryForm">
+                        <label for="categoryFilter" class="form-label filter-label">Category:</label>
+                        <select id="categoryFilter" name="category" class="form-select" onchange="this.form.submit()">
+                            <option value="">All Categories</option>
+                            @foreach (var category in Enum.GetValues(typeof(ReceptHemsida.Models.RecipeCategory)))
+                            {
+                                if (category.ToString() == Model.Category)
+                                {
+                                    <option value="@category" selected>@category</option>
+                                }
+                                else
+                                {
+                                    <option value="@category">@category</option>
+                                }
+                            }
+                        </select>
+                    </form>
+                </div>
+
+                <div class="col-md-4">
+                    <form method="get" id="timeFilterForm">
+                        @if (!string.IsNullOrEmpty(Model.Category))
                         {
-                            <option value="@category">@category</option>
+                            <input type="hidden" name="category" value="@Model.Category" />
                         }
-                    </select>
+                        <label for="timeFilter" class="form-label filter-label">Cooking Time:</label>
+                        <select id="timeFilter" name="cookTime" class="form-select" onchange="this.form.submit()">
+                            <option value="">Select Time</option>
+                            @if (Model.CookTime == 15)
+                            {
+                                <option value="15" selected>Under 15 min</option>
+                            }
+                            else
+                            {
+                                <option value="15">Under 15 min</option>
+                            }
+
+                            @if (Model.CookTime == 30)
+                            {
+                                <option value="30" selected>Under 30 min</option>
+                            }
+                            else
+                            {
+                                <option value="30">Under 30 min</option>
+                            }
+
+                            @if (Model.CookTime == 60)
+                            {
+                                <option value="60" selected>Under 60 min</option>
+                            }
+                            else
+                            {
+                                <option value="60">Under 60 min</option>
+                            }
+
+                            @if (Model.CookTime == 120)
+                            {
+                                <option value="120" selected>Under 2 hours</option>
+                            }
+                            else
+                            {
+                                <option value="120">Under 2 hours</option>
+                            }
+                        </select>
+                    </form>
                 </div>
 
                 <div class="col-md-4">
-                    <label for="timeFilter" class="form-label filter-label">Cooking Time:</label>
-                    <select id="timeFilter" class="form-select">
-                        <option value="all">Select Time</option>
-                        <option value="15">Under 15 min</option>
-                        <option value="30">Under 30 min</option>
-                        <option value="60">Under 60 min</option>
-                        <option value="120">Under 2 hours</option>
-                    </select>
-                </div>
+                    <form method="get" id="difficultyForm">
+                        @if (!string.IsNullOrEmpty(Model.Category))
+                        {
+                            <input type="hidden" name="category" value="@Model.Category" />
+                        }
+                        @if (Model.CookTime.HasValue)
+                        {
+                            <input type="hidden" name="cookTime" value="@Model.CookTime" />
+                        }
+                        <label for="difficultyFilter" class="form-label filter-label">Difficulty:</label>
+                        <select id="difficultyFilter" name="difficulty" class="form-select" onchange="this.form.submit()">
+                            <option value="">All Levels</option>
+                            @if (Model.Difficulty == "easy")
+                            {
+                                <option value="easy" selected>Easy</option>
+                            }
+                            else
+                            {
+                                <option value="easy">Easy</option>
+                            }
 
-                <div class="col-md-4">
-                    <label for="difficultyFilter" class="form-label filter-label">Difficulty:</label>
-                    <select id="difficultyFilter" class="form-select">
-                        <option value="all">All Levels</option>
-                        <option value="easy">Easy</option>
-                        <option value="medium">Medium</option>
-                        <option value="hard">Hard</option>
-                    </select>
+                            @if (Model.Difficulty == "medium")
+                            {
+                                <option value="medium" selected>Medium</option>
+                            }
+                            else
+                            {
+                                <option value="medium">Medium</option>
+                            }
+
+                            @if (Model.Difficulty == "hard")
+                            {
+                                <option value="hard" selected>Hard</option>
+                            }
+                            else
+                            {
+                                <option value="hard">Hard</option>
+                            }
+                        </select>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
-    
-
-
-
 
 <section class="recipes-container">
     <h2 class="section-title">All Recipes</h2>
@@ -107,51 +179,3 @@
         }
     </div>
 </section>
-
-        
-    
-    
-    @if (!Model.Recipes.Any())
-    {
-        <div id="noRecipesMessage" class="no-recipes">
-            <p>No recipes were found with the current filters.</p>
-        </div>
-    }
-}
-
-@section Scripts {
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const categoryFilter = document.getElementById("categoryFilter");
-            categoryFilter.addEventListener("change", function() {
-                const category = this.value;
-                if (category === "all") {
-                    window.location.href = "/recipe";
-                } else {
-                    window.location.href = "/recipe/category/" + category;
-                }
-            });
-
-            const timeFilter = document.getElementById("timeFilter");
-            timeFilter.addEventListener("change", function() {
-                const cookTime = this.value;
-                const recipeCards = document.querySelectorAll(".recipe-card");
-                let visibleCount = 0;
-                
-                recipeCards.forEach(card => {
-                    const cardCookTime = parseInt(card.getAttribute("data-cooktime"));
-                    
-                    if (cookTime === "all" || cardCookTime <= parseInt(cookTime)) {
-                        card.style.display = "block";
-                        visibleCount++;
-                    } else {
-                        card.style.display = "none";
-                    }
-                });
-                
-                document.getElementById("noRecipesMessage").style.display = 
-                    visibleCount === 0 ? "block" : "none";
-            });
-        });
-    </script>
-}

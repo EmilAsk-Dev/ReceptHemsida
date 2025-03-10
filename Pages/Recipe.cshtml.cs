@@ -23,6 +23,12 @@ namespace ReceptHemsida.Pages
         [BindProperty(SupportsGet = true)]
         public string? Id { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public int? CookTime { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string Difficulty { get; set; }
+
         public Recipe SingleRecipe { get; set; }
         public List<Recipe> Recipes { get; set; } = new();
 
@@ -31,13 +37,13 @@ namespace ReceptHemsida.Pages
             _recipeService = recipeService;
         }
 
-        public async Task<IActionResult> OnGetAsync(string? id, string? category, string? search)
+        public async Task<IActionResult> OnGetAsync()
         {
             var allRecipes = await _recipeService.GetAllRecipesAsync();
 
-            if (!string.IsNullOrEmpty(id))
+            if (!string.IsNullOrEmpty(Id))
             {
-                SingleRecipe = await _recipeService.GetRecipeByIdAsync(id);
+                SingleRecipe = await _recipeService.GetRecipeByIdAsync(Id);
                 if (SingleRecipe == null)
                 {
                     return NotFound();
@@ -45,23 +51,39 @@ namespace ReceptHemsida.Pages
                 return Page();
             }
 
-            if (!string.IsNullOrEmpty(search))
+            // Start with all recipes
+            var filteredRecipes = allRecipes;
+
+            // Apply search filter if provided
+            if (!string.IsNullOrEmpty(Search))
             {
-                Recipes = allRecipes
-                    .Where(r => r.Title.Contains(search, StringComparison.OrdinalIgnoreCase) ||
-                                r.Description.Contains(search, StringComparison.OrdinalIgnoreCase))
+                filteredRecipes = filteredRecipes
+                    .Where(r => r.Title.Contains(Search, StringComparison.OrdinalIgnoreCase) ||
+                                r.Description.Contains(Search, StringComparison.OrdinalIgnoreCase))
                     .ToList();
-                return Page();
             }
 
-            if (!string.IsNullOrEmpty(category) && Enum.TryParse<RecipeCategory>(category, true, out var categoryEnum))
+            // Apply category filter if provided
+            if (!string.IsNullOrEmpty(Category) && Enum.TryParse<RecipeCategory>(Category, true, out var categoryEnum))
             {
-                Recipes = allRecipes.Where(r => r.Category == categoryEnum).ToList();
-                return Page();
+                filteredRecipes = filteredRecipes.Where(r => r.Category == categoryEnum).ToList();
             }
 
-            // Default: Show all recipes
-            Recipes = allRecipes;
+            // Apply cook time filter if provided
+            if (CookTime.HasValue)
+            {
+                filteredRecipes = filteredRecipes.Where(r => r.CookTime <= CookTime.Value).ToList();
+            }
+
+            // Apply difficulty filter if provided
+            if (!string.IsNullOrEmpty(Difficulty))
+            {
+                filteredRecipes = filteredRecipes
+                    .Where(r => r.Difficulty.Equals(Difficulty, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+
+            Recipes = filteredRecipes;
             return Page();
         }
     }
