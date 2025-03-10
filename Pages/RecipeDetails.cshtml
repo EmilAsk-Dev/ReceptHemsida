@@ -1,9 +1,12 @@
-﻿@page "{id}"
+﻿
+@page "{id}"
 @model ReceptHemsida.Pages.RecipeDetailsModel
 @{
     ViewData["Title"] = Model.Recipe?.Title ?? "Recipe Details";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
+
+@inject UserManager<ApplicationUser> UserManager
 
 <style>
     :root {
@@ -233,7 +236,11 @@
         </div>
 
         <a asp-page="/recipe" class="btn">Back to All Recipes</a>
-        <a asp-page="/AddRecipe" asp-route-id="@Model.Recipe.Id" class="btn btn-primary">Edit Recipe</a>
+
+        @if (User.Identity.IsAuthenticated && UserManager.GetUserId(User) == Model.Recipe.UserId)
+        {
+            <a asp-page="/AddRecipe" asp-route-id="@Model.Recipe.Id" class="btn btn-primary">Edit Recipe</a>
+        }
     </div>
 }
 else

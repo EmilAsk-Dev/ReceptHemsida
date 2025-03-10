@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using ReceptHemsida.Data;
 using ReceptHemsida.Models;
 using ReceptHemsida.Services;
 
@@ -8,7 +10,8 @@ namespace ReceptHemsida.Pages
     public class RecipeDetailsModel : PageModel
     {
         private readonly RecipeService _recipeService;
-        
+
+
         public Recipe Recipe { get; set; }
         
         public RecipeDetailsModel(RecipeService recipeService)
