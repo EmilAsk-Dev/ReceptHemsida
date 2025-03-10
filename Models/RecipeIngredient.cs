@@ -15,6 +15,10 @@ namespace ReceptHemsida.Models
         [StringLength(100)]
         public string Quantity { get; set; }
 
+        [Required]
+        [StringLength(100)]
+        public string Unit { get; set; }
+
         [ForeignKey("RecipeId")]
         public virtual Recipe Recipe { get; set; }
 

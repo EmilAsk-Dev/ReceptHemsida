@@ -27,16 +27,17 @@ namespace ReceptHemsida.Models
         
         public string Difficulty { get; set; }
         // Relation till instruktionerna
-        public virtual ICollection<RecipeInstruction> Instructions { get; set; } = new List<RecipeInstruction>();
-        public List<string> Tags { get; set; }= new List<string>();
+        
+        public List<string>? Tags { get; set; }= new List<string>();
+
         public string ImageUrl => null;
 
         [ForeignKey("UserId")]
         public virtual ApplicationUser User { get; set; }
 
-
+        public virtual ICollection<RecipeInstruction> Instructions { get; set; }
         public virtual ICollection<RecipeIngredient> RecipeIngredients { get; set; }
-        public virtual ICollection<Comment> Comments { get; set; }
-        public virtual ICollection<Favorite> Favorites { get; set; }
+        public virtual ICollection<Comment>? Comments { get; set; }
+        public virtual ICollection<Favorite>? Favorites { get; set; }
     }
 }

@@ -17,6 +17,6 @@ namespace ReceptHemsida.Data
         public virtual ICollection<Favorite> Favorites { get; set; }
         public virtual ICollection<Follower> Followers { get; set; }
         public virtual ICollection<Follower> Following { get; set; }
+        public virtual ICollection<RecipeIngredient> RecipeIngredient { get; set; }
     }
 }
-

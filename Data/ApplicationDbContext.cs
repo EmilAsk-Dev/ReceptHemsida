@@ -16,14 +16,18 @@ namespace ReceptHemsida.Data
         public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Favorite> Favorites { get; set; }
-        public DbSet<Follower> Followers { get; set; }
-        public DbSet<RecipeInstruction> Instructions { get; set; }
+        public DbSet<Follower> Followers { get; set; }        
         public DbSet<RecipeInstruction> RecipeInstructions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
+
+            modelBuilder.Entity<RecipeInstruction>()
+        .Property(ri => ri.Id)
+        .HasDefaultValueSql("NEWID()")
+        .ValueGeneratedOnAdd();
 
             // Recipe Configuration
             modelBuilder.Entity<Recipe>()
@@ -39,7 +43,7 @@ namespace ReceptHemsida.Data
 
             // RecipeIngredient Configuration
             modelBuilder.Entity<RecipeIngredient>()
-                .HasKey(ri => new { ri.RecipeId, ri.IngredientId });
+                .HasKey(ri => new { ri.RecipeId, ri.IngredientId });            
 
             modelBuilder.Entity<RecipeIngredient>()
                 .HasOne(ri => ri.Recipe)

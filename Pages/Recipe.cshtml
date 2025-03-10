@@ -1,64 +1,181 @@
-﻿@page
+﻿@page "/Recipe/{id?}"
 @model ReceptHemsida.Pages.RecipeModel
 @{
-	ViewData["Title"] = "All Recipes";
-
-	Layout = "~/Pages/Shared/_Layout.cshtml";
+    ViewData["Title"] = "All Recipes";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
-<div class="page-header">
-    <h1>Our Recipes</h1>
-    <p>Discover our delicious recipes for all occasions</p>
-</div>
+<!-- Hero Section with Background Image -->
+<div class="hero-section text-center position-relative">
+    <div class="overlay"></div>
+    <div class="container-fluid position-relative text-white py-5">
+        <!-- Title Above Search -->
+        <h1 class="fw-bold search-title">All recipes</h1>
 
-<div class="filters-container">
-    <div class="filter-group">
-        <label for="categoryFilter">Search Category...:</label>
-        <select id="categoryFilter" class="filter-select">
-            <option value="all">All Categorys</option>
-            @foreach (var category in Enum.GetValues(typeof (ReceptHemsida.Models.RecipeCategory)))
-            {
-                <option value="@category">@category</option>
-            }
-        </select>
+        @*  <!-- Search Input Centered -->
+        <form method="get">
+            <div class="search-container">
+                <input type="text" name="Search" value="@Model.Search" class="form-control search-input" placeholder="Search recipe of your choice...">
+                <button type="submit" class="btn search-btn"><i class="fas fa-search"></i></button>
+            </div>
+        </form> *@
     </div>
 
-        <div class="filter-group">
-            <label for="timeFilter">Cooking Time:</label>
-            <select id="timeFilter" class="filter-select">
-                <option value="all">Choose between</option>
-                <option value="15">Under 15 min</option>
-                <option value="30">Under 30 min</option>
-                <option value="60">Under 60 min</option>
-                <option value="120">Under 2 timmar</option>
-            </select>
-        </div>
-    </div>
+    <!-- Filter Section Below Search -->
+    <div class="container filter-container">
+        <div class="filter-card p-3">
+            <h4 class="mb-3 text-center fw-bold filter-title">Filter Your Recipes</h4>
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <form method="get" id="categoryForm">
+                        <label for="categoryFilter" class="form-label filter-label">Category:</label>
+                        <select id="categoryFilter" name="category" class="form-select" onchange="this.form.submit()">
+                            <option value="">All Categories</option>
+                            @foreach (var category in Enum.GetValues(typeof(ReceptHemsida.Models.RecipeCategory)))
+                            {
+                                if (category.ToString() == Model.Category)
+                                {
+                                    <option value="@category" selected>@category</option>
+                                }
+                                else
+                                {
+                                    <option value="@category">@category</option>
+                                }
+                            }
+                        </select>
+                    </form>
+                </div>
 
-    <div class="recipes-container">
-        @foreach (var recipe in Model.Recipes)
-    {
-        <div class="recipe-card"
-             data-category="@recipe.Category"
-             data-cooktime="@recipe.CookTime">
-            <img src="@(string.IsNullOrEmpty(recipe.ImageUrl) ? "/images/default-recipe.jpg" : recipe.ImageUrl)"
-                 alt="@recipe.Title" class="recipe-img">
-            <div class="recipe-content">
-                <h3 class="recipe-title">@recipe.Title</h3>
-                <div class="recipe-meta">
-                    <span><i class="bi bi-clock"></i> @recipe.CookTime min</span>
-                    <span><i class="bi bi-award"></i> @recipe.Difficulty</span>
-                    <span><i class="bi bi-tag"></i> @recipe.Category</span>
+                <div class="col-md-4">
+                    <form method="get" id="timeFilterForm">
+                        @if (!string.IsNullOrEmpty(Model.Category))
+                        {
+                            <input type="hidden" name="category" value="@Model.Category" />
+                        }
+                        <label for="timeFilter" class="form-label filter-label">Cooking Time:</label>
+                        <select id="timeFilter" name="cookTime" class="form-select" onchange="this.form.submit()">
+                            <option value="">Select Time</option>
+                            @if (Model.CookTime == 15)
+                            {
+                                <option value="15" selected>Under 15 min</option>
+                            }
+                            else
+                            {
+                                <option value="15">Under 15 min</option>
+                            }
+
+                            @if (Model.CookTime == 30)
+                            {
+                                <option value="30" selected>Under 30 min</option>
+                            }
+                            else
+                            {
+                                <option value="30">Under 30 min</option>
+                            }
+
+                            @if (Model.CookTime == 60)
+                            {
+                                <option value="60" selected>Under 60 min</option>
+                            }
+                            else
+                            {
+                                <option value="60">Under 60 min</option>
+                            }
+
+                            @if (Model.CookTime == 120)
+                            {
+                                <option value="120" selected>Under 2 hours</option>
+                            }
+                            else
+                            {
+                                <option value="120">Under 2 hours</option>
+                            }
+                        </select>
+                    </form>
+                </div>
+
+                <div class="col-md-4">
+                    <form method="get" id="difficultyForm">
+                        @if (!string.IsNullOrEmpty(Model.Category))
+                        {
+                            <input type="hidden" name="category" value="@Model.Category" />
+                        }
+                        @if (Model.CookTime.HasValue)
+                        {
+                            <input type="hidden" name="cookTime" value="@Model.CookTime" />
+                        }
+                        <label for="difficultyFilter" class="form-label filter-label">Difficulty:</label>
+                        <select id="difficultyFilter" name="difficulty" class="form-select" onchange="this.form.submit()">
+                            <option value="">All Levels</option>
+                            @if (Model.Difficulty == "easy")
+                            {
+                                <option value="easy" selected>Easy</option>
+                            }
+                            else
+                            {
+                                <option value="easy">Easy</option>
+                            }
+
+                            @if (Model.Difficulty == "medium")
+                            {
+                                <option value="medium" selected>Medium</option>
+                            }
+                            else
+                            {
+                                <option value="medium">Medium</option>
+                            }
+
+                            @if (Model.Difficulty == "hard")
+                            {
+                                <option value="hard" selected>Hard</option>
+                            }
+                            else
+                            {
+                                <option value="hard">Hard</option>
+                            }
+                        </select>
+                    </form>
                 </div>
             </div>
-            <p class="recipe-desc">@recipe.Description</p>
-            <div class="recipe-footer">
-                <a href="/recipe/details/@recipe.Id" class="btn">View Recipe</a>
-            </div>
         </div>
-    }
+    </div>
 </div>
 
-<div id="noRecipesMessage" class="no-recipes" style="display: none;">
-    <p>No recipes was found with the chosen Category.</p>
-</div>
+<section class="recipes-container">
+    <h2 class="section-title">All Recipes</h2>
+    <div class="recipes">
+        @if (Model.Recipes.Any())
+        {
+            @foreach (var recipe in Model.Recipes)
+            {
+                <div class="recipe-card" data-category="@recipe.Category" data-cooktime="@recipe.CookTime">
+                    <img src="@(string.IsNullOrEmpty(recipe.ImageUrl) ? "/images/default-recipe.jpg" : recipe.ImageUrl)" alt="@recipe.Title" class="recipe-img">
+                    <div class="recipe-content">
+                        <h3 class="recipe-title">@recipe.Title</h3>
+                        <div class="recipe-meta">
+                            <span>@recipe.CookTime min</span>
+                            <span>@recipe.Difficulty</span>
+                        </div>
+                        <p class="recipe-desc">@recipe.Description</p>
+                        <div class="recipe-footer">
+                            <div class="recipe-tags">
+                                @foreach (var tag in recipe.Tags)
+                                {
+                                    <span class="recipe-tag">@tag</span>
+                                }
+                            </div>
+                            <a asp-page="/RecipeDetails" asp-route-id="@recipe.Id" class="btn">View Recipe</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+
+        @if (!Model.Recipes.Any())
+        {
+            <div id="noRecipesMessage" class="no-recipes">
+                <p>No recipes were found with the current filters.</p>
+            </div>
+        }
+    </div>
+</section>

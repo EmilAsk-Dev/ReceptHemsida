@@ -35,11 +35,6 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-body {
-    background-color: var(--light);
-    color: var(--dark);
-    line-height: 1.6;
-}
 
 .container {
     max-width: 1200px;
@@ -71,6 +66,7 @@ header {
     .logo span {
         color: var(--dark);
     }
+
 .pan-icon{
     width:30px;
     height:auto;
@@ -78,29 +74,31 @@ header {
 
 .nav-links {
     display: flex;
-    gap: 30px;
+    gap: 10px;
 }
 
-    .nav-links a {
-        text-decoration: none;
-        color: var(--dark);
-        font-weight: 500;
-        transition: color 0.3s;
+.nav-links a {
+    text-decoration: none;
+    color: var(--dark);
+    font-weight: 500;
+    transition: color 0.3s;
     }
 
-        .nav-links a:hover {
-            color: var(--primary);
-        }
+.nav-links a:hover {
+color: var(--primary);
+}
 .user-btn {
-    background: none;
+    background:NONE;
     cursor: pointer;
     padding: 5px;
     margin-left: 10px;
+    border-radius:20px;
 }
 
 .user-icon {
     width: 24px; 
     height: auto;
+    
 }
 .search-bar {
     display: flex;
@@ -126,14 +124,53 @@ header {
     align-items: center;
 }
 .modal-content {
-    background-color: white;
+     background-color: white;
     padding: 20px;
     border-radius: 10px;
     text-align: center;
     width: 400px;
-    height:450px;
+    height:550px;
+    border-radius: 10px;
+   
 }
+.feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+    .feature-list li {
+        display: flex;
+        align-items: flex-start;
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+        .feature-list li::before {
+            content: "";
+            width: 35px;
+            height: 30px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            margin-right: 10px;
+        }
+        .feature-list li.heart::before {
+            background-image: url('/svg/heart.svg'); 
+        }
 
+        .feature-list li.folder::before {
+            background-image: url('/svg/folder.svg');
+        }
+
+        .feature-list li.article::before {
+            background-image: url('/svg/article.svg'); 
+        }
+
+/* Knappar bredvid varandra */
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
 .close {
     position: absolute;
     top: 15px;
@@ -145,12 +182,11 @@ header {
     display: inline-block;
     background: var(--primary);
     color: white;
-    padding: 12px 30px;
-    border-radius: 30px;
+    padding: 5px 35px;
+    border-radius: 20px;
     text-decoration: none;
     font-weight: bold;
     transition: background 0.3s;
-    width:50%;
     text-align:center;
 }
 
@@ -160,6 +196,7 @@ header {
         outline: none;
         width: 100%;
         font-size: 16px;
+        display:flex;
     }
 
     .search-bar button {
@@ -173,48 +210,57 @@ header {
     height:auto;
 }
 
+
 .hero {
-    position: relative;
-    background: url('/svg/Hero_2.jpg') no-repeat center center !important;
-    background-size: cover;
-    display: flex;
-    background-position: center;
+    background: url('../svg/Hero_index.jpg') no-repeat center center/cover;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    text-align:center;
     color: white;
-    text-align: center;
-    padding: 100px 20px;
-    margin-bottom: 40px;
-    width: 100%;
-    min-height: 500px;
+    height: 400px;
+    position: relative;
+    flex-direction:column;
+    border-radius:15px;
+    overflow:hidden;
+    
+    
 }
 
-    .hero h1 {
-        font-size: 40px;
-        margin-bottom: 20px;
+    .hero::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);  
     }
 
-    .hero p {
-        font-size: 18px;
-        max-width: 600px;
-        margin: 0 auto 30px;
-    }
     .hero .container {
-        background: rgba(0, 0, 0, 0.5);
-        padding: 20px;
-        border-radius: 10px;
+        position: relative;
+        z-index: 2;
+        max-width: 100%;
     }
+
 
 .btn {
-    display: inline-block;
-    background:var(--primary);
+    background-color: #228B22;  
     color: white;
-    padding: 12px 30px;
-    border-radius: 30px;
+    padding: 3px;
+    font-size: 0.8rem;
+    border-radius: 5px;
     text-decoration: none;
-    font-weight: bold;
-    transition: background 0.3s;
+    font-weight:normal;
+    transition: 0.3s;
 }
 
-   
+    .btn:hover {
+        background-color: #1c7c1c;
+    }
+
+
+
 
 .categories {
     display: flex;
@@ -590,7 +636,7 @@ footer {
         background: var(--secondary);
     }
 .container {
-    display: flex;
+   /* display: flex;*/
     justify-content: space-between;
     align-items: center;
     gap: 20px;
@@ -613,8 +659,7 @@ footer {
     color: white;
     max-width: 400px;
 }
-
-.video-container {
+video-container {
     flex: 1;
 }
 
@@ -623,10 +668,6 @@ iframe {
     height: 500px;
     border-radius: 10px;
 }
-
-/*Addrecipe*/
-
-/*User*/
 
 
 
@@ -679,9 +720,7 @@ iframe {
 }
 
 .recipe-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
+    padding: 20px;
 }
 
 .ingredients-section,
@@ -758,7 +797,8 @@ iframe {
 }
 
 .recipe-tags {
-    margin-top: 30px;
+    display: flex;
+    gap: 10px; 
 }
 
 .tags-list {
@@ -779,3 +819,334 @@ iframe {
     padding: 20px;
     border-radius: 10px;
 }
+/*AddRecipe*/
+.create-recipe-header {
+    background: url('/Svg/Addrecipe-hero.jpg') no-repeat center center/cover;
+    height: 300px;
+    display: flex;
+    flex-direction:column;
+    border-radius:20px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    position: relative;
+}
+    .create-recipe-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1;
+        border-radius:20px;
+    }
+
+    .create-recipe-header h1  {
+        position: relative;
+        z-index: 2; 
+        font-size: 2.5rem;
+        padding: 15px 30px;
+    }
+    .create-recipe-header .subheading {
+        position: relative;
+        z-index: 2;
+        font-size: 1.2rem; 
+        font-weight: 500;
+        opacity: 0.9;
+        margin-top: 5px;
+        padding: 8px 15px;
+        border-radius: 5px;
+    }
+
+/*Recipe*/
+
+.hero-section {
+    background: url('/RecipeProfile/hero_recipe.jpg') no-repeat center center/cover;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-bottom-left-radius: 50px;
+    border-bottom-right-radius: 50px;
+    overflow: hidden;
+    text-align: center;
+    width: 100%;
+    margin: 0 auto;
+}
+
+   
+    .hero-section .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+    }
+
+
+.search-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    z-index: 2;
+}
+
+
+.search-container {
+    position: relative;
+    max-width: 500px;
+    width: 100%;
+    margin: 0 auto 30px; 
+    z-index: 2;
+}
+
+.search-input {
+    padding: 15px 20px;
+    border-radius: 50px;
+    border: none;
+    width: 100%;
+    font-size: 1rem;
+}
+
+.search-btn {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    background-color: rgb(16, 121, 16); 
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+}
+
+
+.filter-container {
+    margin-top: -40px; 
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.filter-card {
+    background: rgba(255, 255, 255, 0.85); 
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    max-width: 900px;
+    padding: 20px;
+    text-align: center;
+}
+
+
+.filter-title {
+    color: rgb(16, 121, 16); 
+}
+
+/* Labels and Dropdowns */
+.filter-label {
+    font-weight: bold;
+    color: black;
+}
+
+.form-select {
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+.btn-instruction {
+    background-color: rgb(125, 179, 125);
+    color: white;
+    padding: 3px;
+    font-size: 0.8rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: normal;
+    transition: 0.3s;
+}
+
+.password-form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    position:relative;
+    border-radius: 30px;
+   
+}
+.form-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    background: url('/Background/User-Setting.jpg') no-repeat center center;
+    background-size: cover;
+    padding: 40px;
+    border-radius: 15px;
+    width: 80%; 
+    max-width: 800px;
+    margin:auto;
+}
+
+.password-form {
+    background: rgba(255,255,255,0.8);
+    padding: 25px;
+    border-radius: 10px;
+    max-width: 400px;
+    width: 100%;
+}
+    .password-form h2 {
+        font-size: 28px;
+        color: #333;
+        letter-spacing: 0.3px;
+        position: relative;
+        text-align: center;
+    }
+    .password-form button {
+        padding: 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 16px;
+        margin-top:30px;
+    }
+    .password-form input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+/* User Profile Header */
+.user-profile-header {
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    background-image: url('/svg/Addrecipe-hero.jpg');
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+    .user-profile-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(2px);
+        z-index: 1;
+    }
+
+.user-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 30px;
+    background-color: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: white;
+    position: relative;
+    z-index: 2;
+}
+
+.user-info {
+    flex: 1;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 2;
+}
+    .user-info h1 {
+        font-family: "ITC Cheltenham W05", Georgia, serif;
+        font-size: 2rem;
+        margin-bottom: 5px;
+        color: #2d3436;
+    }
+.user-stats span {
+    background-color: #f9f9f9;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: 700; 
+    display: inline-block;
+    margin-right: 10px;
+}
+.icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .icon-btn img {
+        width: 24px;
+        height: 24px;
+        filter: grayscale(50%);
+        transition: filter 0.2s ease-in-out;
+    }
+
+    .icon-btn:hover img {
+        filter: grayscale(0%);
+    }
+
+/*Login*/
+/* Layout för login och bildgalleri */
+.login-container {
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+}
+
+/* Bildgrid på höger sida */
+
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 150px);
+    grid-template-rows: repeat(3, 150px);
+    gap: 10px;
+    width: 320px;
+    height: 500px;
+    position: relative;
+}
+
+
+.grid-item {
+    position: absolute; 
+    width: 150px;
+    height: 150px;
+    transition: transform 1s ease-in-out;
+}
+
+     Bildernas stil 
+    .grid-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 10px;
+    }
