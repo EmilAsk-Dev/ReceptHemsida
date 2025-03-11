@@ -31,12 +31,6 @@ namespace ReceptHemsida.Models
 
         public string? ImageUrl { get; set; }
 
-        public string GetImageUrl()
-        {
-            // Om ImageUrl är null eller tom, sätt standardbilden
-            return string.IsNullOrEmpty(ImageUrl) ? "/RecipeProfile/Default-Recipe.jpg" : ImageUrl;
-        }
-
         [ForeignKey("UserId")]
         public virtual ApplicationUser User { get; set; }
 
