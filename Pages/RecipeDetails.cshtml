@@ -251,22 +251,29 @@
 
         </div>
 
-        <a asp-page="/recipe" class="btn">Back to All Recipes</a>
+        <div class="recipe-owner-actions" style="display: flex; gap: 10px;">
+            <a asp-page="/recipe" class="btn">Back to All Recipes</a>
 
-        @if (User.Identity.IsAuthenticated && UserManager.GetUserId(User) == Model.Recipe.UserId)
-        {
-            <a asp-page="/AddRecipe" asp-route-id="@Model.Recipe.Id" class="btn btn-primary">Edit Recipe</a>
-        }
+            @if (User.Identity.IsAuthenticated)
+            {
+                <form method="post" asp-route-id="@Model.Recipe.Id" class="favorite-form">
+                    <button class="btn" type="submit">
+                        @(Model.IsFavorited ? "Remove from Favorites" : "Add to Favorites")
+                    </button>
+                </form>
+            }
 
-        @if (User.Identity.IsAuthenticated)
-        {
-            <form method="post" asp-route-id="@Model.Recipe.Id">
-                <button class="btn" type="submit">
-                    @* (if else) *@
-                    @(Model.IsFavorited ? "Remove from Favorites" : "Add to Favorites")
-                </button>
-            </form>
-        }
+            @if (User.Identity.IsAuthenticated && UserManager.GetUserId(User) == Model.Recipe.UserId)
+            {
+                <a asp-page="/AddRecipe" asp-route-id="@Model.Recipe.Id" class="btn btn-primary">Edit Recipe</a>
+
+                <form method="post" asp-page-handler="DeleteRecipe" style="margin-left: auto;">
+                    <input type="hidden" name="recipeId" value="@Model.Recipe.Id" />
+                    <button style="background-color: red;" type="submit" class="btn btn-delete">Delete</button>
+                </form>
+            }
+
+        </div>
     </div>
 }
 else

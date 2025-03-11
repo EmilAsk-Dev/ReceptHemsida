@@ -63,7 +63,7 @@ else{
                                     <a asp-page="/AddRecipe" asp-route-id="@recipe.Id" class="btn btn-edit">Edit</a>
                                     <form method="post" asp-page-handler="DeleteRecipe">
                                         <input type="hidden" name="recipeId" value="@recipe.Id" />
-                                        <button type="submit" class="btn btn-delete">Delete</button>
+                                        <button style="background-color: red;" type="submit" class="btn btn-delete">Delete</button>
                                     </form>
                                 </div>
                             }
