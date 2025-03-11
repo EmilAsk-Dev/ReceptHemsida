@@ -43,7 +43,39 @@ namespace ReceptHemsida.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(string id)
+        public async Task<IActionResult> OnPostAsync(string recipeId)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Unauthorized();
+            }
+
+            var userId = _userManager.GetUserId(User);
+
+            var recipe = await _recipeService.GetRecipeByIdAsync(recipeId);
+
+            if (recipe == null)
+            {
+                return NotFound();
+            }
+
+            if (recipe.UserId != userId)
+            {
+                return Unauthorized();
+            }
+
+            try
+            {
+                await _recipeService.DeleteRecipeAsync(recipeId, userId);
+                return RedirectToPage("/Recipe");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while deleting the recipe.");
+            }
+        }
+
+        public async Task<IActionResult> OnPostFavoriteAsync(string id)
         {
             if (!User.Identity.IsAuthenticated)
             {
@@ -63,5 +95,6 @@ namespace ReceptHemsida.Pages
 
             return RedirectToPage();
         }
+
     }
 }

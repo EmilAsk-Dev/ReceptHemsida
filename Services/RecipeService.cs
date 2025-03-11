@@ -113,6 +113,16 @@ namespace ReceptHemsida.Services
                 // Check if the recipe exists and is created by the current user
                 if (recipe != null && recipe.UserId == currentUserId)
                 {
+                    var favorites = await _context.Favorites
+                        .Where(f => f.RecipeId == recipeId)
+                        .ToListAsync();
+
+                    if (favorites.Any())
+                    {
+                        _context.Favorites.RemoveRange(favorites);
+                        await _context.SaveChangesAsync();
+                    }
+
                     _context.Recipes.Remove(recipe);
                     await _context.SaveChangesAsync();
                 }
@@ -131,6 +141,7 @@ namespace ReceptHemsida.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting recipe with ID: {RecipeId}", recipeId);
+                throw; // Re-throw the exception to allow the caller to handle it
             }
         }
 
