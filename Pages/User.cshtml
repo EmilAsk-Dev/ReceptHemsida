@@ -75,7 +75,7 @@ else{
     <!-- Saved Recipes Section -->
     <section class="container">
         <h2 class="section-title">@(isCurrentUserProfile ? "Your Saved Recipes" : $"Recipes Saved by {Model.ProfileUser.UserName}")</h2>
-        <div class="recipes-container">
+        <div class="recipes">
             @foreach (var recipe in Model.SavedRecipes)
             {
                 <div class="recipe-card">
