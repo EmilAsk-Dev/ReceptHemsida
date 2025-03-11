@@ -6,18 +6,23 @@ using ReceptHemsida.Data;
 using ReceptHemsida.Models;
 using ReceptHemsida.Services;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ReceptHemsida.Pages
 {
     public class AddRecipeModel : PageModel
     {
         private readonly ApplicationDbContext _context;
-
         private readonly RecipeService _recipeService;
-        public AddRecipeModel(ApplicationDbContext context, RecipeService recipeService)
+        private readonly IWebHostEnvironment _environment;
+
+        public AddRecipeModel(ApplicationDbContext context, RecipeService recipeService, IWebHostEnvironment environment)
         {
             _recipeService = recipeService;
             _context = context;
+            _environment = environment;
         }
 
         [BindProperty]
@@ -28,6 +33,9 @@ namespace ReceptHemsida.Pages
 
         [BindProperty]
         public List<RecipeInstructionViewModel> Instructions { get; set; } = new List<RecipeInstructionViewModel>();
+
+        [BindProperty]
+        public IFormFile ImageFile { get; set; }
 
         public SelectList Categories { get; set; }
 
@@ -96,6 +104,7 @@ namespace ReceptHemsida.Pages
             ModelState.Remove("Recipe.User");
             ModelState.Remove("Recipe.ImageUrl");
             ModelState.Remove("Recipe.Instructions");
+            ModelState.Remove("ImageFile");
             ModelState.Remove("Recipe.RecipeIngredients");
 
             if (!ModelState.IsValid)
@@ -104,6 +113,57 @@ namespace ReceptHemsida.Pages
                 DifficultyLevels = new SelectList(new[] { "Easy", "Medium", "Hard", "Expert" });
                 AvailableIngredients = await _context.Ingredients.ToListAsync();
                 return Page();
+            }
+
+            // Handle image upload
+            if (ImageFile != null && ImageFile.Length > 0)
+            {
+                // Change this line to point to the RecipeProfile folder
+                var uploadsFolder = Path.Combine(_environment.WebRootPath, "RecipeProfile");
+
+                // Create directory if it doesn't exist
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                // Generate a unique filename
+                var uniqueFileName = Guid.NewGuid().ToString() + "_" + ImageFile.FileName;
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                // Save the file
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await ImageFile.CopyToAsync(fileStream);
+                }
+
+                // Update the image URL path to match the new location
+                var imageUrl = "/RecipeProfile/" + uniqueFileName;
+
+                if (IsEditMode)
+                {
+                    // If updating, store the old image path to delete it later
+                    var existingRecipe = await _recipeService.GetRecipeByIdAsync(Recipe.Id);
+                    var oldImageUrl = existingRecipe?.ImageUrl;
+
+                    // Update the image URL
+                    existingRecipe.ImageUrl = imageUrl;
+
+                    // Delete the old image if it exists
+                    if (!string.IsNullOrEmpty(oldImageUrl))
+                    {
+                        var oldImagePath = Path.Combine(_environment.WebRootPath, oldImageUrl.TrimStart('/'));
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+                }
+                else
+                {
+                    // New recipe
+                    Recipe.ImageUrl = imageUrl;
+                }
             }
 
             if (IsEditMode)

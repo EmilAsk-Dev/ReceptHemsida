@@ -26,11 +26,10 @@ namespace ReceptHemsida.Models
         public int CookTime { get; set; }
         
         public string Difficulty { get; set; }
-        // Relation till instruktionerna
         
         public List<string>? Tags { get; set; }= new List<string>();
 
-        public string ImageUrl => null;
+        public string? ImageUrl { get; set; }
 
         [ForeignKey("UserId")]
         public virtual ApplicationUser User { get; set; }

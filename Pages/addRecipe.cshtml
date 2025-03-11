@@ -12,18 +12,20 @@
     </div> 
 
     <div class="container mb-5">
-        <form method="post" class="recipe-form bg-white rounded-3 shadow-sm p-4">
+        <form method="post" enctype="multipart/form-data" class="recipe-form bg-white rounded-3 shadow-sm p-4">
             <div class="row g-4">
                 
                 <div class="col-lg-6 order-lg-1 order-2">
                     
                     <div class="mb-4">
                         <div class="photo-upload-container text-center p-5 border rounded bg-light position-relative">
-                            <label for="upload-photo" class="d-block cursor-pointer">
-                                <i class="bi bi-camera fs-2 text-primary mb-2"></i>
-                                <p class="text-muted mb-0">Click to add your recipe photo</p>
-                            </label>
-                            <input type="file" id="upload-photo" class="d-none">
+                            <div id="image-preview">
+                                <label for="upload-photo" class="d-block cursor-pointer">
+                                    <i class="bi bi-camera fs-2 text-primary mb-2"></i>
+                                    <p class="text-muted mb-0">Click to add your recipe photo</p>
+                                </label>
+                            </div>
+                            <input type="file" id="upload-photo" name="ImageFile" asp-for="ImageFile" class="d-none">
                         </div>
                     </div>
 
@@ -302,36 +304,36 @@
                 });
             });
 
-            // Add a preview for the photo upload
             $("#upload-photo").change(function() {
-                const file = this.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        $('.photo-upload-container').html(`
-                            <img src="${e.target.result}" class="img-fluid rounded" style="max-height: 200px;">
-                            <div class="position-absolute top-0 end-0 m-2">
-                                <button type="button" id="remove-photo" class="btn btn-sm btn-light rounded-circle">
-                                    <i class="bi bi-x"></i>
-                                </button>
-                            </div>
-                        `);
-                    }
-                    reader.readAsDataURL(file);
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#image-preview').html(`
+                        <img src="${e.target.result}" class="img-fluid rounded" style="max-height: 200px;">
+                        <div class="position-absolute top-0 end-0 m-2">
+                            <button type="button" id="remove-photo" class="btn btn-sm btn-light rounded-circle">
+                                <i class="bi bi-x"></i>
+                            </button>
+                        </div>
+                    `);
                 }
-            });
+                reader.readAsDataURL(file);
+            }
+        });
 
-            $(document).on("click", "#remove-photo", function(e) {
-                e.preventDefault();
-                $("#upload-photo").val("");
-                $('.photo-upload-container').html(`
-                    <label for="upload-photo" class="d-block cursor-pointer">
-                        <i class="bi bi-camera fs-2 text-primary mb-2"></i>
-                        <p class="text-muted mb-0">Click to add your recipe photo</p>
-                    </label>
-                    <input type="file" id="upload-photo" class="d-none">
-                `);
-            });
+        $(document).on("click", "#remove-photo", function(e) {
+            e.preventDefault();
+            // Clear the file input value but don't remove the element
+            $("#upload-photo").val("");
+            // Reset the preview
+            $('#image-preview').html(`
+                <label for="upload-photo" class="d-block cursor-pointer">
+                    <i class="bi bi-camera fs-2 text-primary mb-2"></i>
+                    <p class="text-muted mb-0">Click to add your recipe photo</p>
+                </label>
+            `);
+        });
         });
     </script>
 }
