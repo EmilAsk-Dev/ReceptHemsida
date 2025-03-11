@@ -271,6 +271,8 @@ color: var(--primary);
 }
 
 .category {
+    text-decoration: none;
+    color: inherit; 
     background: white;
     border-radius: 30px;
     padding: 8px 20px;

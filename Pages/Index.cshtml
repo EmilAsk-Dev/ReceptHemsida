@@ -4,18 +4,7 @@
     ViewData["Title"] = "Home page";
 }
 
-
-
 <!-- Hero Section -->
-@*  <section class="hero">
-    <div class="container">
-        <h1>discover delicious recipes</h1>
-        <p>find and share the best recipes from around the world. cook with confidence and enjoy amazing flavors.</p>
-        <a href="#" class="btn">browse recipes</a>
-        
-        
-    </div>
- </section> *@
 <section class="hero">
     <div class="container text-center">
         <div class="row">
@@ -42,95 +31,45 @@
 <!-- Categories Section -->
 <section class="container">
     <div class="categories">
-        <div class="category active">All</div>
-        <div class="category">Breakfast</div>
-        <div class="category">Lunch</div>
-        <div class="category">Dinner</div>
-        <div class="category">Desserts</div>
-        <div class="category">Vegetarian</div>
-        <div class="category">Quick Meals</div>
+        <a asp-page="/Recipe" class="category">All</a>
+        @foreach (var category in Model.Categories)
+        {
+            <a asp-page="/Recipe" asp-route-category="@category" class="category">@category</a>
+        }
     </div>
 </section>
+
 <!-- Recipe Cards Section -->
 <section class="recipes-container">
-    <h2 class="section-title">Popular Recipes</h2>
+    <h2 class="section-title">Recently Added Recipes</h2>
     <div class="recipes">
-        <!-- Recipe Card 1 -->
-        <div class="recipe-card">
-            <img src="/RecipeProfile/Garlicpasta.jpg" alt="Recipe" class="recipe-img">
-            <div class="recipe-content">
-                <h3 class="recipe-title">Creamy Garlic Pasta</h3>
-                <div class="recipe-meta">
-                    <span>30 min</span>
-                    <span>Easy</span>
-                </div>
-                <p class="recipe-desc">A simple yet delicious pasta dish with a creamy garlic sauce that's perfect for weeknight dinners.</p>
-                <div class="recipe-footer">
-                    <div class="recipe-tags">
-                        <span class="recipe-tag">Pasta</span>
-                        <span class="recipe-tag">Quick</span>
+        @foreach (var recipe in Model.RecentRecipes)
+        {
+            <!-- Recipe Card -->
+            <div class="recipe-card">
+                <img src="@(string.IsNullOrEmpty(recipe.ImageUrl) ? "/RecipeProfile/default-recipe.jpg" : recipe.ImageUrl)" alt="@recipe.Title" class="recipe-img">
+                <div class="recipe-content">
+                    <h3 class="recipe-title">@recipe.Title</h3>
+                    <div class="recipe-meta">
+                        <span>@recipe.CookTime min</span>
+                        <span>@recipe.Difficulty</span>
                     </div>
-                    <a href="#" class="btn">View Recipe</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Recipe Card 2 -->
-        <div class="recipe-card">
-            <img src="/RecipeProfile/Choclatecake.jpg" alt="Recipe" class="recipe-img">
-            <div class="recipe-content">
-                <h3 class="recipe-title">Classic Chocolate Cake</h3>
-                <div class="recipe-meta">
-                    <span>60 min</span>
-                    <span>Medium</span>
-                </div>
-                <p class="recipe-desc">A rich and moist chocolate cake that's perfect for birthdays, celebrations, or just because.</p>
-                <div class="recipe-footer">
-                    <div class="recipe-tags">
-                        <span class="recipe-tag">Dessert</span>
-                        <span class="recipe-tag">Baking</span>
+                    <p class="recipe-desc">@recipe.Description</p>
+                    <div class="recipe-footer">
+                        <div class="recipe-tags">
+                            @if (recipe.Tags != null)
+                            {
+                                @foreach (var tag in recipe.Tags.Take(2))
+                                {
+                                    <span class="recipe-tag">@tag</span>
+                                }
+                            }
+                        </div>
+                        <a asp-page="/Recipe/Details" asp-route-id="@recipe.Id" class="btn">View Recipe</a>
                     </div>
-                    <a href="#" class="btn">View Recipe</a>
                 </div>
             </div>
-        </div>
-
-        <!-- Recipe Card 3 -->
-        <div class="recipe-card">
-            <img src="/RecipeProfile/mediterranean.jpg" alt="Recipe" class="recipe-img">
-            <div class="recipe-content">
-                <h3 class="recipe-title">Fresh Mediterranean Salad</h3>
-                <div class="recipe-meta">
-                    <span>15 min</span>
-                    <span>Easy</span>
-                </div>
-                <p class="recipe-desc">A refreshing salad with crisp vegetables, feta cheese, and a tangy lemon dressing.</p>
-                <div class="recipe-footer">
-                    <div class="recipe-tags">
-                        <span class="recipe-tag">Salad</span>
-                        <span class="recipe-tag">Healthy</span>
-                    </div>
-                    <a href="#" class="btn">View Recipe</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Featured Recipe Section -->
-<section class="featured-section">
-    <div class="container">
-        <div class="featured-wrapper">
-            <div class="featured-content">
-                <h2>Featured Recipe of the Month</h2>
-                <p>This delicious homemade lasagna is packed with layers of pasta, rich meat sauce, and creamy cheese. It's the ultimate comfort food that's perfect for family dinners or special occasions.</p>
-                <p>Our chef's special recipe includes a secret blend of herbs and spices that brings this classic dish to the next level.</p>
-                <a href="#" class="btn">Get the Recipe</a>
-            </div>
-            <div class="featured-img">
-                <img src="/RecipeProfile/Lasagna.jpg" alt="Featured Recipe">
-            </div>
-        </div>
+        }
     </div>
 </section>
 
@@ -145,72 +84,3 @@
         </form>
     </div>
 </section>
-
-<!-- Recent Recipes Section -->
-<section class="container">
-    <h2 class="section-title">Recently Added</h2>
-    <div class="recipes">
-        <!-- Recipe Card 4 -->
-        <div class="recipe-card">
-            <img src="/RecipeProfile/Thaicurry.jpg" alt="Recipe" class="recipe-img">
-            <div class="recipe-content">
-                <h3 class="recipe-title">Spicy Thai Curry</h3>
-                <div class="recipe-meta">
-                    <span>45 min</span>
-                    <span>Medium</span>
-                </div>
-                <p class="recipe-desc">An aromatic and flavorful curry with vegetables and your choice of protein in a rich coconut sauce.</p>
-                <div class="recipe-footer">
-                    <div class="recipe-tags">
-                        <span class="recipe-tag">Thai</span>
-                        <span class="recipe-tag">Spicy</span>
-                    </div>
-                    <a href="#" class="btn">View Recipe</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Recipe Card 5 -->
-        <div class="recipe-card">
-            <img src="/RecipeProfile/pizza_neap.jpg" alt="Recipe" class="recipe-img">
-            <div class="recipe-content">
-                <h3 class="recipe-title">Homemade Pizza</h3>
-                <div class="recipe-meta">
-                    <span>90 min</span>
-                    <span>Medium</span>
-                </div>
-                <p class="recipe-desc">Create the perfect pizza at home with a crispy crust and your favorite toppings. Better than takeout!</p>
-                <div class="recipe-footer">
-                    <div class="recipe-tags">
-                        <span class="recipe-tag">Italian</span>
-                        <span class="recipe-tag">Family</span>
-                    </div>
-                    <a href="#" class="btn">View Recipe</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Recipe Card 6 -->
-        <div class="recipe-card">
-            <img src="/RecipeProfile/bananabread.jpg" alt="Recipe" class="recipe-img">
-            <div class="recipe-content">
-                <h3 class="recipe-title">Banana Bread</h3>
-                <div class="recipe-meta">
-                    <span>70 min</span>
-                    <span>Easy</span>
-                </div>
-                <p class="recipe-desc">A moist and delicious way to use up those overripe bananas. Perfect with a cup of coffee or tea.</p>
-                <div class="recipe-footer">
-                    <div class="recipe-tags">
-                        <span class="recipe-tag">Baking</span>
-                        <span class="recipe-tag">Breakfast</span>
-                    </div>
-                    <a href="#" class="btn">View Recipe</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-

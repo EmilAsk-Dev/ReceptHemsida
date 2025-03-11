@@ -154,5 +154,22 @@ namespace ReceptHemsida.Services
             }
         }
 
+        public async Task<List<Recipe>> GetRecentRecipesAsync(int count)
+        {
+            try
+            {
+                return await _context.Recipes
+                    .OrderByDescending(r => r.CreatedAt)
+                    .Take(count)
+                    .Include(r => r.User)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching recent recipes");
+                return new List<Recipe>();
+            }
+        }
+
     }
 }
