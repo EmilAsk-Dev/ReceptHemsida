@@ -169,7 +169,7 @@
     <div class="recipe-container">
         <div class="recipe-header">
             <div class="recipe-image">
-                <img src="@(string.IsNullOrEmpty(Model.Recipe.ImageUrl) ? "/images/default-recipe.jpg" : Model.Recipe.ImageUrl)" alt="@Model.Recipe.Title">
+                <img src="@(string.IsNullOrEmpty(Model.Recipe.ImageUrl) ? "/RecipeProfile/default-recipe.jpg" : Model.Recipe.ImageUrl)" alt="@Model.Recipe.Title" class="recipe-img">
             </div>
             <div class="recipe-info">
                 <h1>@Model.Recipe.Title</h1>
@@ -267,7 +267,7 @@
             {
                 <a asp-page="/AddRecipe" asp-route-id="@Model.Recipe.Id" class="btn btn-primary">Edit Recipe</a>
 
-                <form method="post">
+                <form style="margin-left: auto;" method="post">
                     <input type="hidden" name="recipeId" value="@Model.Recipe.Id" />
                     <button style="background-color: red;" type="submit" class="btn btn-delete">Delete</button>
                 </form>
